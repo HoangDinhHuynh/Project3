@@ -61,5 +61,10 @@ userSchema.pre('save', async function(next){
     const salt = brcrypt.genSaltSync(10)
     this.password = await brcrypt.hash(this.password,salt)
 })
+userSchema.methods = {
+    isCorrectPassword: async function (password) {
+        return await brcrypt.compare(password, this.password)
+    }
+}
 //Export the model
 module.exports = mongoose.model('User', userSchema);
