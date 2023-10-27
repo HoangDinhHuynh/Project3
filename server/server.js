@@ -18,7 +18,7 @@ dbConnect()
 // Khai báo ROUTES
 initRoutes(app)
 
-//  Cổng 
+// Cổng 
 app.use('/', (req,res) => {res.send('SERVER POPPY')})
 app.listen(port, () => {
     console.log('Server running on port : ' + port);
