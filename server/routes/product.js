@@ -4,6 +4,7 @@ const {verifyAccessToken,isAdmin} = require('../middlewares/verifytoken')
 
 router.post('/createproduct',[verifyAccessToken,isAdmin],ctrls.createProduct)
 router.get('/getallproduct',ctrls.getAllProduct)
+router.put('/ratings',[verifyAccessToken],ctrls.ratings)
 
 
 router.put('/updateproduct/:pid',[verifyAccessToken,isAdmin],ctrls.updateProduct)
