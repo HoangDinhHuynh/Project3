@@ -46,15 +46,15 @@ const login = asyncHanlder(async(req,res)=>{
    const response = await User.findOne({email})
    if (response && await response.isCorrectPassword(password)){
         // Tách password và role ra khỏi response
-        const {password,role, ...userData} = response.toObject()
+        const {password,role,refreshToken, ...userData} = response.toObject()
         // Tạo access Token
         const accessToken = generateAccessToken(response._id,role)
         // Tạo refresh Token
-        const refreshToken = generateRefreshToken(response._id)
+        const newRefreshToken = generateRefreshToken(response._id)
         // Lưu refreshToken vào database
-        await User.findByIdAndUpdate(response._id, {refreshToken},{new:true})
+        await User.findByIdAndUpdate(response._id, {refreshToken:newRefreshToken},{new:true})
         // Lưu refreshToken vào cookie
-        res.cookie('refreshToken',refreshToken,{httpOnly:true,maxAge: 7*24*60*60*1000})
+        res.cookie('refreshToken',newRefreshToken,{httpOnly:true,maxAge: 7*24*60*60*1000})
         return res.status(200).json({
             success : true ,
             accessToken,
@@ -68,35 +68,7 @@ const login = asyncHanlder(async(req,res)=>{
 })
 
 
-// Hàm lấy ra thông tin 1 người dùng
-const getCurrent = asyncHanlder(async(req,res)=>{
-    const {_id} = req.user
-    const user = await User.findById(_id).select('-refreshToken -password -role')
-    return res.status(200).json({
-        success: false,
-        rs : user ? user : 'User not found'
-    })
-})
-
-
-// Hàm cấp lại access token khi refresh token còn hạn
-const refreshAccessToken = asyncHanlder(async(req,res) => {
-    // Lấy token từ cookie
-    const cookie = req.cookies
-    // Check xem có token hay không
-    if (!cookie && !cookie.refreshToken) throw new Error('No refresh Token in cookies')
-    // Check token có hợp lệ hay không
-    const rs = await jwt.verify(cookie.refreshToken, process.env.JWT_SECRET)
-    const response = await User.findOne({_id : rs._id ,refreshToken:cookie.refreshToken})
-    return res.status(200).json({
-        success : response ? true : false,
-        newAccessToken : response ? generateAccessToken(response._id,response.role) : 'Refresh token not match'
-    })
-
-})
-
-
-// Hàm Đăng Xuất
+// HÀM ĐĂNG XUẤT
 const logout = asyncHanlder(async(req,res) => {
     const cookie =  req.cookies
     if(!cookie || !cookie.refreshToken) throw new Error('No refresh token in cookies')
@@ -113,7 +85,30 @@ const logout = asyncHanlder(async(req,res) => {
     })
 })
 
-// Hàm Quên Mật Khẩu
+
+
+
+
+// HÀM CẤP LẠI ACCESS TOKEN KHI REFRESH TOKEN CÒN HẠN
+const refreshAccessToken = asyncHanlder(async(req,res) => {
+    // Lấy token từ cookie
+    const cookie = req.cookies
+    // Check xem có token hay không
+    if (!cookie && !cookie.refreshToken) throw new Error('No refresh Token in cookies')
+    // Check token có hợp lệ hay không
+    const rs = await jwt.verify(cookie.refreshToken, process.env.JWT_SECRET)
+    const response = await User.findOne({_id : rs._id ,refreshToken:cookie.refreshToken})
+    return res.status(200).json({
+        success : response ? true : false,
+        newAccessToken : response ? generateAccessToken(response._id,response.role) : 'Refresh token not match'
+    })
+
+})
+
+
+
+
+// HÀM QUÊN MẬT KHẨU
 const forgotPassword = asyncHanlder(async(req,res)=>{
     const {email} = req.query
     if (!email) throw new Error('Missing Email!')
@@ -138,7 +133,7 @@ const forgotPassword = asyncHanlder(async(req,res)=>{
 })
 
 
-// 
+// HÀM ĐỔI MẬT KHẨU
 const resetPassword = asyncHanlder(async(req,res)=>{
     const {password,token} = req.body
     if(!password||!token) throw new Error('Missing input')
@@ -155,6 +150,66 @@ const resetPassword = asyncHanlder(async(req,res)=>{
         mes : user? 'Updated password' :'Something went wrong'
     })
 })
+
+
+// HÀM LẤY TẤT CẢ NGƯỜI DÙNG
+const getAllUsers = asyncHanlder(async(req,res)=>{
+    const response = await User.find().select('-refreshToken -password -role')
+    return res.status(200).json({
+        success : response ? true : false,
+        user : response
+
+    })
+})
+
+
+// HÀM LẤY RA THÔNG TIN CỦA 1 NGƯỜI DÙNG
+const getCurrent = asyncHanlder(async(req,res)=>{
+    const {_id} = req.user
+    const user = await User.findById(_id).select('-refreshToken -password -role')
+    return res.status(200).json({
+        success: user ? true : false,
+        rs : user ? user : 'User not found'
+    })
+})
+
+// HÀM XOÁ NGƯỜI DÙNG
+const deleteUser = asyncHanlder(async(req,res)=>{
+    const {_id} = req.query
+    if (!_id) throw new Error('Missing input !')
+    const response = await User.findByIdAndDelete(_id)
+    return res.status(200).json({
+        success : response ? true : false,
+        deleteUser : response ? `User with email : ${response.email} deleted`:'No user delete'
+
+    })
+})
+
+
+// HÀM SỬA NGƯỜI DÙNG CỦA USER
+const updateUser = asyncHanlder(async(req,res)=>{
+    const {_id} = req.user
+    if (!_id || Object.keys(req.body).length === 0)  throw new Error('Missing input !')
+    const response = await User.findByIdAndUpdate(_id,req.body,{new :true}).select('-password -role -refreshToken')
+    return res.status(200).json({
+        success : response ? true : false,
+        updatedUser : response ? response : 'Something went wrong'
+
+    })
+})
+
+
+// HÀM SỬA NGƯỜI DÙNG CỦA ADMIN
+const updateUserByAdmin = asyncHanlder(async(req,res)=>{
+    const { uid} = req.params
+    if (Object.keys(req.body).length === 0)  throw new Error('Missing input !')
+    const response = await User.findByIdAndUpdate(uid,req.body,{new :true}).select('-password -role -refreshToken')
+    return res.status(200).json({
+        success : response ? true : false,
+        updatedUser : response ? response : 'Something went wrong'
+
+    })
+})
 module.exports = {
     register,
     login,
@@ -162,5 +217,9 @@ module.exports = {
     refreshAccessToken,
     logout,
     forgotPassword,
-    resetPassword
+    resetPassword,
+    getAllUsers,
+    deleteUser,
+    updateUser,
+    updateUserByAdmin
 }

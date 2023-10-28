@@ -1,6 +1,8 @@
 const jwt = require('jsonwebtoken')
 const asyncHanlder = require('express-async-handler')
 
+
+// HÀM KIỂM TRA THỜI HẠN CỦA ACCESS TOKEN
 const verifyAccessToken = asyncHanlder(async(req,res,next)=>{
     if(req?.headers?.authorization?.startsWith('Bearer')){
         const token = req.headers.authorization.split(' ')[1]
@@ -19,6 +21,20 @@ const verifyAccessToken = asyncHanlder(async(req,res,next)=>{
         })
     }
 }) 
+
+// HÀM KIỂM TRA QUYỀN CỦA USER
+const isAdmin = asyncHanlder((req,res,next)=>{
+    const {role} = req.user
+    if (role !== 'admin') 
+    return res.status(401).json({
+        success : false,
+        mes: 'REQUIRE ADMIN ROLE !'
+    })
+    next() 
+})
+
+
 module.exports = {
-    verifyAccessToken
+    verifyAccessToken,
+    isAdmin
 }
