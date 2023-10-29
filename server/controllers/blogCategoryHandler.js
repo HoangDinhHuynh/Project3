@@ -30,7 +30,7 @@ const updateCategory = asyncHanlder(async(req,res)=>{
     })
 })
 
-// 
+// HÀM XOÁ DANH MỤC
 const deleteCategory = asyncHanlder(async(req,res)=>{
     const {bcid} = req.params
     const response = await BlogCategory.findByIdAndDelete(bcid)
