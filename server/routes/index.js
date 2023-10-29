@@ -1,10 +1,12 @@
 const userRouter = require('./user')
 const productRouter = require('./product')
+const ProductCategoryRouter = require('./productCategory')
 const {notFound,errHandler} = require('../middlewares/ErrHandler')
 
 const initRoutes = (app) =>{
     app.use('/api/user',userRouter)
     app.use('/api/product',productRouter)
+    app.use('/api/prodcategory',ProductCategoryRouter)
 
     app.use(notFound)
     app.use(errHandler)
