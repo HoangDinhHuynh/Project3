@@ -145,7 +145,13 @@ const ratings = asyncHanlder(async(req,res)=>{
 
 // HÀM UPLOAD ẢNH LÊN CLOUD
 const uploadImagesProduct = asyncHanlder(async(req,res)=>{
-    return res.json('Oke')
+    const{pid} = req.params
+    if (!req.files) throw new Error('Missing Inpus')
+    const respone = await Product.findByIdAndUpdate(pid,{$push:{images: {$each: req.files.map(el => el.path)}}},{new:true})
+    return res.status(200).json({
+        status :  respone ? true : false, 
+        updatedProduct : respone ? respone : 'Cannot upload Images product'
+    })
 })
 
 

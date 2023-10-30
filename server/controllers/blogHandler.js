@@ -125,6 +125,17 @@ const deleteBlog = asyncHanlder(async(req,res)=>{
 })
 
 
+// HÀM UPLOAD ẢNH LÊN CLOUD
+const uploadImagesBlog = asyncHanlder(async(req,res)=>{
+    const{bid} = req.params
+    if (!req.file) throw new Error('Missing Inpus')
+    const respone = await Blog.findByIdAndUpdate(bid,{images: req.file.path},{new:true})
+    return res.status(200).json({
+        status :  respone ? true : false, 
+        updatedProduct : respone ? respone : 'Cannot upload Images blog'
+    })
+})
+
 
 module.exports ={
     createNewBlog,
@@ -133,5 +144,6 @@ module.exports ={
     likeBlog,
     dislikeBlog,
     getBlog,
-    deleteBlog
+    deleteBlog,
+    uploadImagesBlog
 }

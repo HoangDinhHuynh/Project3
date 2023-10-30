@@ -210,6 +210,56 @@ const updateUserByAdmin = asyncHanlder(async(req,res)=>{
 
     })
 })
+
+
+// HÀM SỬA NGƯỜI DÙNG CỦA ADMIN
+const updateUserAddress = asyncHanlder(async(req,res)=>{
+    const { _id} = req.user
+    if (!req.body.address)  throw new Error('Missing input !')
+    const response = await User.findByIdAndUpdate(_id,{$push:{address:req.body.address}},{new :true}).select('-password -role -refreshToken')
+    return res.status(200).json({
+        success : response ? true : false,
+        updatedUser : response ? response : 'Something went wrong'
+
+    })
+})
+
+
+// HÀM SỬA NGƯỜI DÙNG CỦA ADMIN
+const updateCart = asyncHanlder(async(req,res)=>{
+    const { _id} = req.user
+    const {pid ,quantity,color} =req.body
+    if (!pid || !quantity || !color)  throw new Error('Missing input !')
+    const user = await User.findById(_id).select('cart')
+    const alreadyProduct = user?.cart?.find(el => el.product.toString() === pid) 
+    if (alreadyProduct){
+        if(alreadyProduct.color === color ){
+            const response = await User.updateOne({cart:{$elemMatch:alreadyProduct}},{$set:{"cart.$.quantity":quantity}},{new:true})
+            return res.status(200).json({
+                success : response ? true : false,
+                updatedUser : response ? response : 'Something went wrong'
+        
+            })
+        }else{
+            const response = await User.findByIdAndUpdate(_id,{$push:{cart:{product:pid,quantity,color}}},{new:true})
+            return res.status(200).json({
+                success : response ? true : false,
+                updatedUser : response ? response : 'Something went wrong'
+        
+            })
+        }
+    }else{
+        const response = await User.findByIdAndUpdate(_id,{$push:{cart:{product:pid,quantity,color}}},{new:true})
+        return res.status(200).json({
+            success : response ? true : false,
+            updatedUser : response ? response : 'Something went wrong'
+    
+        })
+    }
+})
+
+
+
 module.exports = {
     register,
     login,
@@ -221,5 +271,7 @@ module.exports = {
     getAllUsers,
     deleteUser,
     updateUser,
-    updateUserByAdmin
+    updateUserByAdmin,
+    updateUserAddress,
+    updateCart
 }
