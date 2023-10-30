@@ -142,11 +142,20 @@ const ratings = asyncHanlder(async(req,res)=>{
         updatedProduct
     })
 })
+
+// HÀM UPLOAD ẢNH LÊN CLOUD
+const uploadImagesProduct = asyncHanlder(async(req,res)=>{
+    return res.json('Oke')
+})
+
+
+
 module.exports = {
     createProduct,
     getProduct,
     getAllProduct,
     updateProduct,
     deleteProcduct,
-    ratings
+    ratings,
+    uploadImagesProduct
 }

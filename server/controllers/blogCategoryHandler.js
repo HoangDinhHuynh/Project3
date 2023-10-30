@@ -36,7 +36,7 @@ const deleteCategory = asyncHanlder(async(req,res)=>{
     const response = await BlogCategory.findByIdAndDelete(bcid)
     return res.json({
         success : response? true : false,
-        updatedCategory : response ? response :'Cannot delete blog-category'
+        deletedCategory : response ? response :'Cannot delete blog-category'
     })
 })
 module.exports = {
