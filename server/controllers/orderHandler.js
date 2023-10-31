@@ -10,7 +10,7 @@ const createOrder = asyncHanlder(async(req,res)=>{
     const userCart = await User.findById(_id).select('cart')
     return res.json({
         success : userCart? true : false,
-        createdBlog : userCart ? userCart :'Cannot create new Order'
+        rs : userCart ? userCart :'Something Went wrong'
     })
 })
 
