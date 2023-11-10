@@ -1,5 +1,5 @@
-import React from "react";
-import {Banner,Sidebar} from '../../component'
+import React,{useEffect, useState} from "react";
+import {Banner,Sidebar,BestSeller} from '../../component'
 
 
 const Home = () =>{
@@ -11,7 +11,7 @@ const Home = () =>{
             </div>
             <div className="flex flex-col gap-5 pl-5 w-[80%] flex-auto ">
                 <Banner />
-                <span>Best Seller</span>
+                <BestSeller />
             </div>
         </div>
     )
