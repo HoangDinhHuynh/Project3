@@ -18,21 +18,25 @@ button.slick-next::before{
     color : grey;
     content: '\276F';
     background-color: #ffd3d3;
-    width: 80px;
-    height: 80px;
+    width: 60px;
+    height: 60px;
     font-size: 30px;
     display: flex;
     justify-content:center;
     align-items:center;
+    border-radius: 50px;
+    opacity: 0.4;
 }
 button.slick-prev::before{
     color : grey;
     content: '\276E';
     background-color: #ffd3d3;
-    width: 80px;
-    height: 80px;
+    width: 60px;
+    height: 60px;
     font-size: 30px;
     display: flex;
     justify-content:center;
     align-items:center;
+    border-radius: 50px;
+    opacity: 0.4;
 }

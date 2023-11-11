@@ -8,7 +8,7 @@ const FeatureProduct = () =>{
 
     const fetchProducts = async () =>{
         const response = await apiGetProducts({limit:9,totalRating:5})
-        console.log(response)
+        // console.log(response)
         if(response.success) setProducts(response.products)
     }
     useEffect(()=>{

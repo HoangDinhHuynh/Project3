@@ -66,7 +66,7 @@ const DealDaily = () =>{
         }
     },[second, minute, hour, expireTime])
     return(
-        <div className="border w-full flex-auto p-4 w-full">
+        <div className="border w-full flex-auto p-4">
             <div className="flex items-center justify-between">
                 <span className="flex-1 flex justify-center"><BsStarFill size={20} color="#DD1111"/></span>
                 <span className="flex-8 font-semibold text-[20px] flex justify-center text-gray-700">DEAL DAILY</span>
@@ -89,7 +89,7 @@ const DealDaily = () =>{
                 </div>
                 <button 
                 type='button'
-                className="flex gap-2 items-center justify-center w-full bg-main hover:bg-gray-800 hover:text-white font-medium py-2"
+                className="flex gap-2 items-center rounded-md justify-center w-full bg-main hover:bg-gray-800 hover:text-white font-medium py-2 transition-colors ease-out delay-100 duration-300"
                 >
                     <BiMenu />
                     <span>

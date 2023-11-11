@@ -1,17 +1,18 @@
 import React from "react";
 import {Outlet} from 'react-router-dom'
-import {Header,Navigation} from '../../component'
+import {Header,Navigation,TopHeader,Footer} from '../../component'
 
 
 const Public = () =>{
     return(
         <div className="w-full flex flex-col items-center">
-                <Header />
-                <Navigation />
+            <TopHeader />
+            <Header />
+            <Navigation />
             <div className="w-main">
-             <Outlet />
+                <Outlet />
             </div>    
- 
+            <Footer/>
         </div>
     )
 }

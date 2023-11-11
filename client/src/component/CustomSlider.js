@@ -6,9 +6,12 @@ import {Product} from './'
 const settings = {
     dots: false,
     infinite: true,
-    speed: 500,
+    // speed: 500,
     slidesToShow: 3,
-    slidesToScroll: 1
+    slidesToScroll: 1,
+    autoplay: true,
+    autoplaySpeed: 3500,
+    pauseOnHover: false
   };
 
 const CustomSlider = ({products,activeTab}) =>{

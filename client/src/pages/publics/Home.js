@@ -42,7 +42,7 @@ const Home = () =>{
                         className="w-[396px]"
                         >
                             <div className="border flex p-4 gap-4 min-h-[190px]">
-                                <img src={el?.image} className="flex-1 w-[144px] h-[129px] object-contain"/>
+                                <img src={el?.image} alt="cate" className="flex-1 w-[144px] h-[129px] object-contain"/>
                                 <div className="flex-1 text-gray-700">
                                     <h4 className="font-semibold uppercase">{el.tiltle}</h4>
                                     <ul className="text-sm">
@@ -59,7 +59,9 @@ const Home = () =>{
                     ))}
                 </div>
             </div>
-            <div className="h-[1500px]"></div>
+            <div className="my-8 w-full">
+                <h3 className="text-[20px] font-semibold py-[15px] border-b-2 border-main">BLOG POSTS</h3>
+            </div>
         </>
     )
 }
