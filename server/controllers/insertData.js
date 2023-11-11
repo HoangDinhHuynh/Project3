@@ -34,7 +34,8 @@ const insertProduct = asyncHanlder(async(req,res)=>{
 const fn2 = async(cate) =>{
     await ProductCategory.create({
         tiltle: cate?.cate,
-        brand:  cate?.brand
+        brand:  cate?.brand,
+        image: cate?.image
     })
 }
 const insertCategory = asyncHanlder(async(req,res)=>{

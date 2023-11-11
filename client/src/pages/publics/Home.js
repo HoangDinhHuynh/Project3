@@ -1,8 +1,15 @@
 import React from "react";
-import {Banner,Sidebar,BestSeller,DealDaily,FeatureProduct} from '../../component'
+import {Banner,Sidebar,BestSeller,DealDaily,FeatureProduct,CustomSlider} from '../../component'
+import {useSelector} from 'react-redux'
+import icons from '../../ultils/icon'
 
-
+const {IoIosArrowForward}= icons
 const Home = () =>{
+    const {newProducts} = useSelector(state => state.products)
+    const {categories} = useSelector(state => state.app)
+
+
+
     return(
         <>
             <div className='w-main flex'>
@@ -17,6 +24,40 @@ const Home = () =>{
             </div>
             <div className="my-8">
                 <FeatureProduct />
+            </div>
+            <div className="my-8 w-full">
+                <h3 className="text-[20px] font-semibold py-[15px] border-b-2 border-main">NEW ARRIVALS</h3>
+                <div className="mt-4 mx-[-10px] ">
+                    <CustomSlider
+                        products={newProducts}
+                    />
+                </div>
+            </div>
+            <div className="my-8 w-full">
+                <h3 className="text-[20px] font-semibold py-[15px] border-b-2 border-main">HOT COLECTIONS</h3>
+                <div className="flex flex-wrap gap-4 mt-4 ">
+                    {categories?.filter(el => el.brand.length > 0)?.map(el=>(
+                        <div 
+                        key={el._id}
+                        className="w-[396px]"
+                        >
+                            <div className="border flex p-4 gap-4 min-h-[190px]">
+                                <img src={el?.image} className="flex-1 w-[144px] h-[129px] object-contain"/>
+                                <div className="flex-1 text-gray-700">
+                                    <h4 className="font-semibold uppercase">{el.tiltle}</h4>
+                                    <ul className="text-sm">
+                                        {el?.brand?.map(item => (
+                                            <span className="flex gap-1 items-center text-gray-500 hover:text-main cursor-pointer">
+                                                <IoIosArrowForward size={14} />
+                                                <li key={item}>{item}</li>
+                                            </span>
+                                        ))}
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    ))}
+                </div>
             </div>
             <div className="h-[1500px]"></div>
         </>

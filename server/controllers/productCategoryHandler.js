@@ -13,7 +13,7 @@ const createCategory = asyncHanlder(async(req,res)=>{
 
 //  HÀM LẤY TẤT CẢ DANH MỤC
 const getAllCategory = asyncHanlder(async(req,res)=>{
-    const response = await ProductCategory.find().select('tiltle _id')
+    const response = await ProductCategory.find()
     return res.json({
         success : response? true : false,
         AllProductCategory : response ? response :'Cannot get all product-Category'

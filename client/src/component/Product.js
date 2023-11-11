@@ -37,7 +37,11 @@ const Product = ({productData, isNew}) =>{
                 </div>
                 <div className="flex flex-col mt-[15px] items-start gap-1 w-full">
                     <span className="line-clamp-1">{productData?.tiltle}</span>
-                    <span className="flex h-[24px]">{productData?.totalRating ? renderStarFromNumber(productData?.totalRating) : 'chưa có đánh giá'}</span>
+                    <span className="flex h-[24px]">{productData?.totalRating ? 
+                    renderStarFromNumber(productData?.totalRating, 14)?.map((el,index) => (
+                        <span key={index}>{el}</span>
+                    )) 
+                    : 'chưa có đánh giá'}</span>
                     <span>{`${formatMoney(productData?.price)} VNĐ`}</span>
                 </div>
             </div>
