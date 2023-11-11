@@ -6,7 +6,7 @@ import {Countdown} from './'
 
 
 const {BsStarFill,BiMenu} = icons
-
+let idInterval
 
 const DealDaily = () =>{
 
@@ -14,16 +14,47 @@ const DealDaily = () =>{
     const [hour,setHour] = useState(0)
     const [minute,setMinute] = useState(0)
     const [second,setSecond] = useState(0)
+    const [expireTime,setExpireTime] = useState(false)
 
     const fetchDealDaily = async() => {
-        const response = await apiGetProducts({limit:1,page:2,totalRating:5})
+        const response = await apiGetProducts({limit:1,page:Math.round(Math.random()*10),totalRating:5})
         if (response.success) setDealDaily(response.products[0])
+        setHour(8)
+        setMinute(59)
+        setSecond(59)
     }
 
-    useEffect(()=>{
+    // useEffect(()=>{
+    //     fetchDealDaily()
+    // },[])
+    useEffect(() => {
+        idInterval && clearInterval(idInterval)
         fetchDealDaily()
-    },[])
-    
+    }, [expireTime])
+    useEffect(()=>{
+        idInterval = setInterval(()=>{
+            console.log(idInterval)
+            if (second>0) setSecond(prev => prev-1)
+            else{
+                if(minute > 0) {
+                    setMinute(prev => prev-1)
+                    setSecond(59)
+                }else{
+                    if(hour > 0){
+                        setHour(prev => prev -1 )
+                        setMinute(59)
+                        setSecond(59)
+                    }else{
+                        setExpireTime(!expireTime)
+                    }
+                }
+
+            }
+        },1000)
+        return () => {
+            clearInterval(idInterval)
+        }
+    },[second, minute, hour, expireTime])
     return(
         <div className="border w-full flex-auto p-4 w-full">
             <div className="flex items-center justify-between">

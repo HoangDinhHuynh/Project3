@@ -14,8 +14,8 @@ const Home = () =>{
                     <Banner />
                     <BestSeller />
                 </div>
-                <div className="h-[1500px]"></div>
             </div>
+            <div className="h-[1500px]"></div>
         </>
     )
 }
