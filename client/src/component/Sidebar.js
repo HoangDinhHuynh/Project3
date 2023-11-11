@@ -3,7 +3,7 @@ import {NavLink} from 'react-router-dom'
 import {createSlug} from '../ultils/helpers' 
 import { useSelector } from "react-redux/es/hooks/useSelector";
 
-const Slidebar = () =>{
+const Sidebar = () =>{
     const {categories} = useSelector(state => state.app)
     return(
         <div className="flex flex-col border">
@@ -20,4 +20,4 @@ const Slidebar = () =>{
     )
 }
 
-export default Slidebar
+export default Sidebar

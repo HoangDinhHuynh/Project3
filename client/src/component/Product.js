@@ -1,8 +1,7 @@
 import React,{useState} from "react";
-import {formatMoney } from "../ultils/helpers"
+import {formatMoney,renderStarFromNumber } from "../ultils/helpers"
 import label from '../assets/label.webp'
 import labelTrend from '../assets/label-trend.png'
-import {renderStarFromNumber} from '../ultils/helpers'
 import {SelectOption} from './'
 import icons from '../ultils/icon'
 
