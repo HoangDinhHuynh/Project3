@@ -1,7 +1,8 @@
 import React, { useEffect, useState,memo } from "react";
+import moment from 'moment'
 import icons from '../ultils/icon'
 import { apiGetProducts } from "../apis/product";
-import {formatMoney,renderStarFromNumber } from "../ultils/helpers"
+import {formatMoney,renderStarFromNumber,secondsToHms } from "../ultils/helpers"
 import {Countdown} from './'
 
 
@@ -18,10 +19,19 @@ const DealDaily = () =>{
 
     const fetchDealDaily = async() => {
         const response = await apiGetProducts({limit:1,page:Math.round(Math.random()*10),totalRating:5})
-        if (response.success) setDealDaily(response.products[0])
-        setHour(8)
-        setMinute(59)
-        setSecond(59)
+        if (response.success) {
+            setDealDaily(response.products[0])
+            const today = `${moment().format('MM/DD/YYYY')} 5:00:00`
+            const seconds = new Date(today).getTime() -new Date().getTime() + 24 *3600 * 1000
+            const number = secondsToHms(seconds)
+            setHour(number.h)
+            setMinute(number.m)
+            setSecond(number.s)
+        }else{
+            setHour(0)
+            setMinute(59)
+            setSecond(59) 
+        }
     }
 
     // useEffect(()=>{
