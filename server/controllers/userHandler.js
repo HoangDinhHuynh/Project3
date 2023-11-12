@@ -9,7 +9,7 @@ const crypto = require('crypto')
 //  HÀM ĐĂNG KÝ
 const register = asyncHanlder(async(req,res)=>{
     const{email,password,firstname,lastname,mobile}=req.body
-    if (!email || !password || !firstname || !lastname || !mobile) 
+    if (!email || !password || !firstname || !lastname || !mobile ) 
     return res.status(400).json({
         success : false,
         mes: 'Missing inputs'
