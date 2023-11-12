@@ -8,7 +8,8 @@ const path ={
     OUR_SERVICES : 'services',
     FAQ : 'faqs',
     DETAIL_PRODUCT__PID__TILTLE : 'san-pham/:pid/:tiltle',
-    DETAIL_PRODUCT : 'san-pham'
+    DETAIL_PRODUCT : 'san-pham',
+    FINAL_REGISTER: 'finalregister/:status'
 }
 
 

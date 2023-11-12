@@ -3,7 +3,7 @@ import bg_login from '../../assets/bg-login2.jpg'
 import {InputField,Button} from '../../component'
 import { apiRegister,apiLogin } from "../../apis/user";
 import Swal from 'sweetalert2'
-import { useNavigate } from "react-router-dom";
+import { useNavigate , useLocation } from "react-router-dom";
 import path from "../../ultils/path";
 import {register} from '../../store/user/userSlice'
 import { useDispatch } from "react-redux";
@@ -12,6 +12,8 @@ const Login = () =>{
 
     const navigate = useNavigate()
     const dispatch = useDispatch()
+    const location = useLocation()
+    console.log(location)
 
     const [payLoad, setPayLoad] = useState({
         email : '',
