@@ -1,13 +1,26 @@
-import React from 'react'
+import React,{useEffect,useState} from 'react'
 import { useParams } from 'react-router-dom'
+import { apiGetProduct } from '../../apis/product'
 
 const DetailProduct = () => {
 
   const {pid ,tiltle} = useParams()
   // console.log(pid , tiltle) 
-
+  const fetchProductData = async () => {  
+    const response = await apiGetProduct(pid)
+    console.log(response)
+   }
+  useEffect(() => { 
+    if(pid) fetchProductData()
+   },[pid])
   return (
-    <div>DetailProduct</div>
+    <div className='w-full'>
+      <div className='h-[81px] flex justify-center items-center bg-gray-100 '>
+          <div className='w-main'>
+          <h3>{tiltle}</h3>
+          </div>
+      </div>
+    </div>
   )
 }
 

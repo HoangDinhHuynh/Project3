@@ -3,7 +3,7 @@ import bg_login from '../../assets/bg-login2.jpg'
 import {InputField,Button} from '../../component'
 import { apiRegister,apiLogin,apiForgotPassword,apiFinalRegister } from "../../apis/user";
 import Swal from 'sweetalert2'
-import { useNavigate } from "react-router-dom";
+import { useNavigate ,Link} from "react-router-dom";
 import path from "../../ultils/path";
 import {login} from '../../store/user/userSlice'
 import { useDispatch } from "react-redux";
@@ -187,6 +187,7 @@ const Login = () =>{
                         onClick={() => setIsRegister(false)}
                         >Go Login</span>}
                     </div>
+                    {!isRegister && <Link to={`/${path.HOME}`} className="text-blue-500 text-sm cursor-pointer">HOME</Link>}
                 </div>
             </div>
         </div>
