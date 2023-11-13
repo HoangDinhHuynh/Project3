@@ -53,7 +53,10 @@ const register = asyncHanlder(async (req, res) => {
 const finalRegister = asyncHanlder(async(req,res)=>{
     const cookie = req.cookies
     const {token} = req.params
-    if(!cookie || cookie?.dataregister?.token  !== token) return res.redirect(`${process.env.CLIENT_URL}/finalregister/failed`)
+    if(!cookie || cookie?.dataregister?.token  !== token) {
+        res.clearCookie('dataregister')
+        return res.redirect(`${process.env.CLIENT_URL}/finalregister/failed`)
+    }
     const newUser = await User.create({
         email: cookie?.dataregister?.email,
         password: cookie?.dataregister?.password,
@@ -61,6 +64,7 @@ const finalRegister = asyncHanlder(async(req,res)=>{
         firstname: cookie?.dataregister?.firstname,
         lastname: cookie?.dataregister?.lastname,
     })
+    res.clearCookie('dataregister')
     if(newUser) return res.redirect(`${process.env.CLIENT_URL}/finalregister/success`)
     else return res.redirect(`${process.env.CLIENT_URL}/finalregister/failed`)
 })
@@ -139,7 +143,7 @@ const refreshAccessToken = asyncHanlder(async(req,res) => {
 
 // HÀM QUÊN MẬT KHẨU
 const forgotPassword = asyncHanlder(async(req,res)=>{
-    const {email} = req.query
+    const {email} = req.body
     if (!email) throw new Error('Missing Email!')
     const user = await User.findOne({email})
     if(!user) throw new Error('User not found')
@@ -148,7 +152,7 @@ const forgotPassword = asyncHanlder(async(req,res)=>{
 
 
     // 
-    const html = `Xin vui lòng click vào link dưới đây để thay đổi mất khẩu của bạn.Link này sẽ hết hạn sau 15 phút kể từ bây giờ. <a href=${process.env.URL_SERVER}/api/user/reset-password/${resetToken}>Click Here</a>`
+    const html = `Xin vui lòng click vào link dưới đây để thay đổi mất khẩu của bạn.Link này sẽ hết hạn sau 15 phút kể từ bây giờ. <a href=${process.env.CLIENT_URL}/reset-password/${resetToken}>Click Here</a>`
 
     const data = {
         email ,

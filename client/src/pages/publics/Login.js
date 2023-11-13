@@ -1,7 +1,7 @@
 import React,{useState,useCallback} from "react";
 import bg_login from '../../assets/bg-login2.jpg'
 import {InputField,Button} from '../../component'
-import { apiRegister,apiLogin } from "../../apis/user";
+import { apiRegister,apiLogin,apiForgotPassword } from "../../apis/user";
 import Swal from 'sweetalert2'
 import { useNavigate , useLocation } from "react-router-dom";
 import path from "../../ultils/path";
@@ -12,8 +12,6 @@ const Login = () =>{
 
     const navigate = useNavigate()
     const dispatch = useDispatch()
-    const location = useLocation()
-    console.log(location)
 
     const [payLoad, setPayLoad] = useState({
         email : '',
@@ -22,7 +20,7 @@ const Login = () =>{
         lastname : '',
         mobile: ''
     })
-
+    const [isForgotPassword, setIsForgotPassword] = useState(false)
     const [isRegister,setIsRegister] = useState(false)
     const resetPayload = () => {
         setPayLoad({
@@ -33,7 +31,11 @@ const Login = () =>{
             mobile: ''
         })
     }
-
+    const [email, setEmail] = useState('')
+    const handleForgotPassword = async() => { 
+        const response = await apiForgotPassword({email})
+        console.log(response)
+     }
     const handleSubmit = useCallback(async()=>{
         const {firstname,lastname,mobile, ...data} = payLoad 
         if(isRegister){
@@ -56,6 +58,25 @@ const Login = () =>{
 
     return(
         <div className="w-screen h-screen relative">
+            <div className="absolute top-0 left-0 bottom-0 right-0 bg-overlay flex flex-col items-center py-8 z-50 text-white">
+                <div className="flex flex-col gap-4">
+                    <label htmlFor="email">Enter Your Email :</label>
+                    <input 
+                    type="text" 
+                    id="email"
+                    className="w-[800px] p-4 border-b outline-none rounded-full text-black"
+                    placeholder="EX : name@gmail.com"
+                    value={email}
+                    onChange={e => setEmail(e.target.value)}
+                    />
+                    <div className="flex items-center justify-end w-full">
+                    <Button 
+                    name="Submit"
+                    handleOnClick={handleForgotPassword}
+                    />
+                    </div>
+                </div>
+            </div>
             <img 
             src={bg_login} 
             alt="bg-login"

@@ -14,7 +14,8 @@ app.use(express.urlencoded({extended : true}))
 app.use(cookieParser())
 app.use(cors({
     origin : process.env.CLIENT_URL,
-    method :  ['POST','PUT','GET','DELETE']
+    method :  ['POST','PUT','GET','DELETE'],
+    credentials : true
 }))
 
 // Kết nối database
