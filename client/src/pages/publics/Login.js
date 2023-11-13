@@ -7,6 +7,7 @@ import { useNavigate , useLocation } from "react-router-dom";
 import path from "../../ultils/path";
 import {register} from '../../store/user/userSlice'
 import { useDispatch } from "react-redux";
+import { toast } from "react-toastify";
 
 const Login = () =>{
 
@@ -34,7 +35,10 @@ const Login = () =>{
     const [email, setEmail] = useState('')
     const handleForgotPassword = async() => { 
         const response = await apiForgotPassword({email})
-        console.log(response)
+        if(response.success){
+            toast.success(response.mes ,{theme : 'colored'})
+
+        } else toast.info(response.mes ,{theme : 'colored'})
      }
     const handleSubmit = useCallback(async()=>{
         const {firstname,lastname,mobile, ...data} = payLoad 
@@ -58,7 +62,7 @@ const Login = () =>{
 
     return(
         <div className="w-screen h-screen relative">
-            <div className="absolute top-0 left-0 bottom-0 right-0 bg-overlay flex flex-col items-center py-8 z-50 text-white">
+            {isForgotPassword && <div className="absolute animate-slide-bottom top-0 left-0 bottom-0 right-0 bg-overlay flex flex-col items-center py-8 z-50 text-white">
                 <div className="flex flex-col gap-4">
                     <label htmlFor="email">Enter Your Email :</label>
                     <input 
@@ -69,14 +73,19 @@ const Login = () =>{
                     value={email}
                     onChange={e => setEmail(e.target.value)}
                     />
-                    <div className="flex items-center justify-end w-full">
-                    <Button 
-                    name="Submit"
-                    handleOnClick={handleForgotPassword}
-                    />
+                    <div className="flex items-center justify-end w-full gap-4">
+                        <Button 
+                        name="Submit"
+                        handleOnClick={handleForgotPassword}
+                        style='px-4 py-2 my-2 rounded-md text-white bg-green-500 text-semibold'
+                        />
+                        <Button 
+                        name="Back"
+                        handleOnClick={()=> setIsForgotPassword(false)}
+                        />
                     </div>
                 </div>
-            </div>
+            </div>}
             <img 
             src={bg_login} 
             alt="bg-login"
@@ -118,7 +127,7 @@ const Login = () =>{
                     fw
                     />
                     <div className="flex items-center justify-between my-2 w-full text-sm">
-                        {!isRegister && <span className="text-blue-500 hover:underline cursor-pointer">Forgot Your Account?</span>}
+                        {!isRegister && <span onClick={()=> setIsForgotPassword(true)} className="text-blue-500 hover:underline cursor-pointer">Forgot Your Account?</span>}
                         {!isRegister && <span 
                         className="text-blue-500 hover:underline cursor-pointer"
                         onClick={() => setIsRegister(true)}

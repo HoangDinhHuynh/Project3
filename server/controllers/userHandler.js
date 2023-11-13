@@ -161,8 +161,8 @@ const forgotPassword = asyncHanlder(async(req,res)=>{
     }
     const rs = await sendMail(data)
     return res.status(200).json({
-        success: true,
-        rs
+        success: rs.response?.includes('OK') ? true : false,
+        mes : rs.response?.includes('OK') ? "Please Check Your Mail !": "Something went wrong.Please try later"
     })
 })
 
