@@ -5,16 +5,16 @@
 
 
 
-
-button.slick-next{
+/* Custom Slider */
+.custom-slider button.slick-next{
     right : 80px;
     z-index: 10;
 }
-button.slick-prev{
+.custom-slider button.slick-prev{
     left : 20px;
     z-index: 10;
 }
-button.slick-next::before{
+.custom-slider button.slick-next::before{
     color : grey;
     content: '\276F';
     background-color: #ffd3d3;
@@ -27,12 +27,52 @@ button.slick-next::before{
     border-radius: 50px;
     opacity: 0.4;
 }
-button.slick-prev::before{
+.custom-slider button.slick-prev::before{
     color : grey;
     content: '\276E';
     background-color: #ffd3d3;
     width: 60px;
     height: 60px;
+    font-size: 30px;
+    display: flex;
+    justify-content:center;
+    align-items:center;
+    border-radius: 50px;
+    opacity: 0.4;
+}
+
+
+
+/* Detail Slider */
+.images-slider button.slick-next{
+    right : 0px;
+    top: 63px;
+    z-index: 10;
+}
+.images-slider button.slick-prev{
+    left : -20px;
+    top: 63px;
+    z-index: 10;
+}
+.images-slider button.slick-next::before{
+    color : grey;
+    content: '\276F';
+    background-color: #ffd3d3;
+    width: 40px;
+    height: 40px;
+    font-size: 30px;
+    display: flex;
+    justify-content:center;
+    align-items:center;
+    border-radius: 50px;
+    opacity: 0.4;
+}
+.images-slider button.slick-prev::before{
+    color : grey;
+    content: '\276E';
+    background-color: #ffd3d3;
+    width: 40px;
+    height: 40px;
     font-size: 30px;
     display: flex;
     justify-content:center;

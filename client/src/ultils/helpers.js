@@ -1,3 +1,4 @@
+/* eslint-disable */
 import icons from './icon'
 
 const { BsStarFill, BsStar } = icons
@@ -24,7 +25,6 @@ export function secondsToHms(d) {
 export const validate = (payLoad,setInvalidFields) => {
     let invalids = 0
     const formatPayload = Object.entries(payLoad)
-    console.log(formatPayload)
     for (let arr  of  formatPayload){
         if (arr[1].trim() === '') {
             invalids++
