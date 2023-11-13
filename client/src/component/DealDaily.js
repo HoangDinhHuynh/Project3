@@ -78,7 +78,9 @@ const DealDaily = () =>{
                     alt=""
                     className="w-full object-contain" />
                 <span className="line-clamp-1 text-center">{dealDaily?.tiltle}</span>
-                <span className="flex h-[24px]">{dealDaily?.totalRating ? renderStarFromNumber(dealDaily?.totalRating ,20) : 'chưa có đánh giá'}</span>
+                <span className="flex h-[24px]">{dealDaily?.totalRating ? renderStarFromNumber(dealDaily?.totalRating ,20).map((el,index) => (
+                    <span key={index}>{el}</span>
+                ))  : 'chưa có đánh giá'}</span>
                 <span>{`${formatMoney(dealDaily?.price)} VNĐ`}</span>
             </div>
             <div className="px-4 mt-8">
