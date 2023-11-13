@@ -40,33 +40,36 @@ const register = asyncHanlder(async (req, res) => {
         throw new Error('User has existed!')
     else {
         const token = makeToken()
-        res.cookie('dataregister', { ...req.body, token }, { httpOnly: true, maxAge: 15 * 60 * 1000 })
-        const html = `Xin vui lòng click vào link dưới đây để hoàn tất quá trình đăng ký.Link này sẽ hết hạn sau 15 phút kể từ bây giờ. <a href=${process.env.URL_SERVER}/api/user/finalregister/${token}>Click Here</a>`
-        await sendMail({ email, html, subject: 'Hoàn Tất Đăng Ký Digital World' })
+        const emailEdited = btoa(email)+'@'+token
+        const newUser = await User.create({
+            email : emailEdited,password,firstname,lastname,mobile
+        })
+        if (newUser){
+            const html = `<h2>Register code : </h2><br/><blockquote>${token}</blockquote>`
+            await sendMail({ email, html, subject: 'Confirm register account in  Digital World' })
+        }
+        setTimeout(async() => { 
+            await User.deleteOne({email : emailEdited})
+         },[300000])
         return res.json({
-            success: true,
-            mes: 'Please check your email to active account'
+            success: newUser? true :false,
+            mes: newUser ? 'Please check your email to active account' : 'Something went wrong.Please try later'
         })
     }
 
 })
 const finalRegister = asyncHanlder(async(req,res)=>{
-    const cookie = req.cookies
+    // const cookie = req.cookies
     const {token} = req.params
-    if(!cookie || cookie?.dataregister?.token  !== token) {
-        res.clearCookie('dataregister')
-        return res.redirect(`${process.env.CLIENT_URL}/finalregister/failed`)
+    const notActivedEmail = await User.findOne({email : new RegExp(`${token}$`)})
+    if(notActivedEmail){
+        notActivedEmail.email = atob(notActivedEmail?.email?.split('@')[0])
+        notActivedEmail.save()
     }
-    const newUser = await User.create({
-        email: cookie?.dataregister?.email,
-        password: cookie?.dataregister?.password,
-        mobile: cookie?.dataregister?.mobile,
-        firstname: cookie?.dataregister?.firstname,
-        lastname: cookie?.dataregister?.lastname,
+    return res.json({
+        success: notActivedEmail? true :false,
+        mes : notActivedEmail ? 'Register is Successfully. Please go login !' : 'Something went wrong.Please try later'
     })
-    res.clearCookie('dataregister')
-    if(newUser) return res.redirect(`${process.env.CLIENT_URL}/finalregister/success`)
-    else return res.redirect(`${process.env.CLIENT_URL}/finalregister/failed`)
 })
 // HÀM ĐĂNG NHẬP
 const login = asyncHanlder(async(req,res)=>{
