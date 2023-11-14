@@ -40,13 +40,19 @@ const getAllProduct = asyncHanlder(async(req,res)=>{
     // Formats lại các operators cho đúng cú pháp của mongoose
     let queryString = JSON.stringify(queries)
     queryString = queryString.replace(/\b(gte|gt|lt|lte)\b/g, macthedEl => `$${macthedEl}`) 
-    const formatedQueries =  JSON.parse(queryString) 
+    const restQueries =  JSON.parse(queryString)
+    let formatedQueries = {} 
+    if (queries?.color) {
+        delete restQueries.color
+        const colorQuery = queries.color?.split(',').map(el=>({color :{$regex:el,$options:'i'}}))
+        formatedQueries = {$or : colorQuery}
+    }
 
     // Filtering
-    if (queries?.tiltle) formatedQueries.tiltle = {$regex: queries.tiltle ,$options: 'i'}
-    if (queries?.category) formatedQueries.category ={ $regex : queries.category,$options:'i'}
-    if (queries?.color) formatedQueries.color ={ $regex : queries.color,$options:'i'}
-    let queryCommand = Product.find(formatedQueries)
+    if (queries?.tiltle) restQueries.tiltle = {$regex: queries.tiltle ,$options: 'i'}
+    if (queries?.category) restQueries.category ={ $regex : queries.category,$options:'i'}
+    const q = {...formatedQueries, ...restQueries}
+    let queryCommand = Product.find(q)
 
     // Sorting
     if (req.query.sort) {
@@ -69,7 +75,7 @@ const getAllProduct = asyncHanlder(async(req,res)=>{
     // Số lượng sp thoả mãn điều kiện !== số lượng trả về 1 lần gọi api
     queryCommand.exec(async(err,response) =>{
         if (err) throw new Error(err.message)
-        const counts = await Product.find(formatedQueries).countDocuments()
+        const counts = await Product.find(q).countDocuments()
         return res.status(200).json({
             success : response ? true : false,
             counts,

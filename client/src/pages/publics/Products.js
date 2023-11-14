@@ -1,6 +1,6 @@
-import React,{useEffect,useState,useCallback} from 'react'
-import {useParams,useSearchParams} from 'react-router-dom'
-import { Breadcrumb, Product ,SearchItem} from '../../component'
+import React, { useEffect, useState, useCallback } from 'react'
+import { useParams, useSearchParams } from 'react-router-dom'
+import { Breadcrumb, Product, SearchItem } from '../../component'
 import { apiGetProducts } from '../../apis'
 import Masonry from 'react-masonry-css'
 
@@ -17,23 +17,26 @@ const Products = () => {
   const [activeClick, setActiveClick] = useState(null)
   const [params] = useSearchParams()
 
-  const fecthProductByCategory = async(queries) => { 
-     const response = await apiGetProducts(queries)
-     if (response.success) setProducts(response.products)
+  const fecthProductByCategory = async (queries) => {
+    const response = await apiGetProducts(queries)
+    if (response.success) setProducts(response.products)
   }
-  const {category} = useParams()
-  useEffect(()=> {
+  const { category } = useParams()
+
+  useEffect(() => {
     let param = []
-    for(let i of params.entries()) param.push(i)
+    for (let i of params.entries()) param.push(i)
     const queries = {}
-    for (let i of params) queries[i[0]] = i[1] 
+    for (let i of params) queries[i[0]] = i[1]
     console.log(param)
     fecthProductByCategory(queries)
-  },[params])
-  const ChangeActiveFilter = useCallback((name) => { 
+  }, [params])
+
+  const ChangeActiveFilter = useCallback((name) => {
     if (activeClick === name) setActiveClick(null)
     else setActiveClick(name)
-   },[activeClick])
+  }, [activeClick])
+
   return (
     <div className='w-full'>
       <div className='h-[81px] flex justify-center items-center bg-gray-100 '>
@@ -46,17 +49,17 @@ const Products = () => {
         <div className='w-4/5 flex-auto flex flex-col gap-3'>
           <span className='font-semibold text-sm'>Filter By</span>
           <div className='flex items-center gap-4'>
-              <SearchItem
+            <SearchItem
               name='price'
               activeClick={activeClick}
               ChangeActiveFilter={ChangeActiveFilter}
               type='input'
-              />
-              <SearchItem
+            />
+            <SearchItem
               name='color'
               activeClick={activeClick}
               ChangeActiveFilter={ChangeActiveFilter}
-              />
+            />
           </div>
         </div>
         <div className='w-1/5'>
@@ -68,13 +71,13 @@ const Products = () => {
           breakpointCols={breakpointColumnsObj}
           className="my-masonry-grid flex mx-[-10px]"
           columnClassName="my-masonry-grid_column">
-          {products?.map(el=>(
+          {products?.map(el => (
             <Product
               key={el._id}
               pid={el.id}
               productData={el}
               normal={true}
-        />
+            />
           ))}
         </Masonry>
       </div>
