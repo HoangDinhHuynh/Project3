@@ -45,13 +45,13 @@
 
 /* Detail Slider */
 .images-slider button.slick-next{
-    right : 0px;
-    top: 63px;
+    right : 13px;
+    top: 40px;
     z-index: 10;
 }
 .images-slider button.slick-prev{
     left : -20px;
-    top: 63px;
+    top: 42px;
     z-index: 10;
 }
 .images-slider button.slick-next::before{

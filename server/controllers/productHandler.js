@@ -44,6 +44,7 @@ const getAllProduct = asyncHanlder(async(req,res)=>{
 
     // Filtering
     if (queries?.tiltle) formatedQueries.tiltle = {$regex: queries.tiltle ,$options: 'i'}
+    if (queries?.category) formatedQueries.category ={ $regex : queries.category,$options:'i'}
     let queryCommand = Product.find(formatedQueries)
 
     // Sorting

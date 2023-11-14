@@ -14,7 +14,7 @@ const settings = {
     pauseOnHover: false
   };
 
-const CustomSlider = ({products,activeTab}) =>{
+const CustomSlider = ({products,activeTab,normal}) =>{
     return(
         <>
         {products && <Slider className="custom-slider" {...settings}>
@@ -24,6 +24,7 @@ const CustomSlider = ({products,activeTab}) =>{
                 pid={el.id}
                 productData={el}
                 isNew={activeTab === 1 ? false : true }
+                normal={normal}
             />
         ))}
     </Slider>}

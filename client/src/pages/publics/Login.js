@@ -97,7 +97,7 @@ const Login = () =>{
                     className="px-4 py-2 bg-green-500 font-semibold text-white rounded-r-md "
                     onClick={finalRegister}
                     >
-                        Sumbmit
+                        Submit
                     </button>
                 </div>
             </div>}
@@ -114,14 +114,16 @@ const Login = () =>{
                     />
                     <div className="flex items-center justify-end w-full gap-4">
                         <Button 
-                        name="Submit"
                         handleOnClick={handleForgotPassword}
                         style='px-4 py-2 my-2 rounded-md text-white bg-green-500 text-semibold'
-                        />
+                        >
+                        Submit
+                        </Button>
                         <Button 
-                        name="Back"
                         handleOnClick={()=> setIsForgotPassword(false)}
-                        />
+                        >
+                        Back
+                        </Button>
                     </div>
                 </div>
             </div>}
@@ -171,11 +173,12 @@ const Login = () =>{
                     invalidFields={invalidFields}
                     setInvalidFields={setInvalidFields}
                     />
-                    <Button 
-                    name={isRegister ? 'Register' : 'Login'}
+                    <Button                     
                     handleOnClick={handleSubmit}
                     fw
-                    />
+                    >
+                    {isRegister ? 'Register' : 'Login'}
+                    </Button>
                     <div className="flex items-center justify-between my-2 w-full text-sm">
                         {!isRegister && <span onClick={()=> setIsForgotPassword(true)} className="text-blue-500 hover:underline cursor-pointer">Forgot Your Account?</span>}
                         {!isRegister && <span 

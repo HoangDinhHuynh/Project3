@@ -10,7 +10,7 @@ import path from "../ultils/path";
 const {AiFillEye,BiMenu, BsFillSuitHeartFill}  = icons
 
 
-const Product = ({productData, isNew}) =>{
+const Product = ({productData, isNew , normal}) =>{
     const [isShowOption, setIsShowOption] = useState(false)
     return(
         <div className="w-full text-base px-[10px]">
@@ -35,7 +35,7 @@ const Product = ({productData, isNew}) =>{
                     <img src={productData?.thumb || 'https://nayemdevs.com/wp-content/uploads/2020/03/default-product-image.png'}
                         alt=""
                         className="w-[274px] h-[274px] object-cover" />
-                    <img src={isNew ? label : labelTrend} alt="label" className={`absolute w-[100px] top-[-31px] left-[-39px] object-contain`} />
+                    {!normal && <img src={isNew ? label : labelTrend} alt="label" className={`absolute w-[100px] top-[-31px] left-[-39px] object-contain`} />}
                     <span className="font-bold absolute text-white top-[-15px] left-[-10px]">{isNew ? 'New' : 'Trend'}</span>
                 </div>
                 <div className="flex flex-col mt-[15px] items-start gap-1 w-full">
