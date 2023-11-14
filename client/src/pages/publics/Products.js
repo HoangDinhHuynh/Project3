@@ -15,16 +15,21 @@ const Products = () => {
 
   const [products, setProducts] = useState(null)
   const [activeClick, setActiveClick] = useState(null)
+  const [params] = useSearchParams()
 
   const fecthProductByCategory = async(queries) => { 
      const response = await apiGetProducts(queries)
      if (response.success) setProducts(response.products)
-     console.log(response)
   }
   const {category} = useParams()
   useEffect(()=> {
-    fecthProductByCategory()
-  },[])
+    let param = []
+    for(let i of params.entries()) param.push(i)
+    const queries = {}
+    for (let i of params) queries[i[0]] = i[1] 
+    console.log(param)
+    fecthProductByCategory(queries)
+  },[params])
   const ChangeActiveFilter = useCallback((name) => { 
     if (activeClick === name) setActiveClick(null)
     else setActiveClick(name)
@@ -45,6 +50,7 @@ const Products = () => {
               name='price'
               activeClick={activeClick}
               ChangeActiveFilter={ChangeActiveFilter}
+              type='input'
               />
               <SearchItem
               name='color'
@@ -64,7 +70,7 @@ const Products = () => {
           columnClassName="my-masonry-grid_column">
           {products?.map(el=>(
             <Product
-              key={el.id}
+              key={el._id}
               pid={el.id}
               productData={el}
               normal={true}
