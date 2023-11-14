@@ -139,3 +139,42 @@ const {RiTruckFill,FaShieldAlt,BsReplyFill,FaTty,AiFillGift} = icons
     'green',
     'blue',
  ]
+
+ export const sorts = [
+    {
+        id:1,
+        value:'-sold',
+        text: 'Best Selling'
+    },
+    {
+        id:2,
+        value:'-tiltle',
+        text: 'Alphabeticaly, Z-A'
+    },
+    {
+        id:3,
+        value:'tiltle',
+        text: 'Alphabeticaly, A-Z'
+    },
+    {
+        id:4,
+        value:'-price',
+        text: 'Price , High to Low'
+    },
+    {
+        id:5,
+        value:'price',
+        text: 'Price , Low to High'
+    },
+    {
+        id:6,
+        value:'-createdAt',
+        text: 'Date , New to Old'
+    },
+    {
+        id:7,
+        value:'createdAt',
+        text: 'Price , Old to new'
+    },
+
+ ]

@@ -2,8 +2,9 @@ import React,{memo,useEffect,useState} from 'react'
 import icons from '../ultils/icon'
 import { colors } from '../ultils/contants'
 import { createSearchParams,useNavigate,useParams } from 'react-router-dom'
-import path from '../ultils/path'
 import { apiGetProducts } from '../apis'
+import useDebounce from '../hooks/useDebounce'
+
 
 const {FaChevronDown} =icons
 
@@ -11,7 +12,10 @@ const SearchItem = ({name ,activeClick, ChangeActiveFilter, type='checkbox'}) =>
     const navigate = useNavigate()
     const {category} = useParams()
     const [selected, setSelected] = useState([])
-    const [price, setPrice] = useState([0,0])
+    const [price, setPrice] = useState({
+        from: '',
+        to: ''
+    })
     const [bestPrice, setBestPrice] = useState(null)
 
     const hanldeSelect = (e) => {
@@ -44,19 +48,23 @@ const SearchItem = ({name ,activeClick, ChangeActiveFilter, type='checkbox'}) =>
      },[type])
 
      useEffect(() => { 
-        console.log(price)
-
-        // const validPrice = price.filter(el => +el > 0)
-
-        // if(price.from > 0){
-        //     navigate({
-        //         pathname : `/${category}`,
-        //         search : createSearchParams(price).toString()
-        //     })
-        // }else {
-        //     navigate(`/${category}`)
-        // }
+        if (price.from > price.to) alert('From price cannot greater than To price')
       },[price])
+
+     const debouncePriceFrom = useDebounce(price.from,500)
+     const debouncePriceTo = useDebounce(price.to,500)
+
+     useEffect(() => { 
+
+        const data = {}
+
+        if(Number(price.from) > 0) data.from = price.from
+        if(Number(price.to) > 0) data.to = price.to
+        navigate({
+            pathname : `/${category}`,
+            search : createSearchParams(data).toString()
+        })
+      },[debouncePriceFrom,debouncePriceTo])
 
     return (
         <div 
@@ -94,7 +102,7 @@ const SearchItem = ({name ,activeClick, ChangeActiveFilter, type='checkbox'}) =>
                             <span className='whitespace-nowrap'>{`The highest price is ${Number(bestPrice).toLocaleString()} VND`}</span>
                             <span onClick={e=> {
                                 e.stopPropagation()
-                                setSelected([])
+                                setPrice({from :'',to:''})
                             }} className='underline cursor-pointer hover:text-main'>Reset</span>
                         </div>
                         <div className='flex items-center p-2 gap-2'>
@@ -104,20 +112,20 @@ const SearchItem = ({name ,activeClick, ChangeActiveFilter, type='checkbox'}) =>
                                 className='form-input' 
                                 type='number' 
                                 id='from'
-                                value={price[0]}
-                                onChange={e=>setPrice(prev => prev.map((el,index)=> index === 0 ? e.target.value:el))}
+                                value={price.from}
+                                onChange={e=>setPrice(prev => ({...prev,from : e.target.value}))}
                                 >
                                     
                                 </input>
                             </div>
                             <div className='flex items-center gap-2'>
-                                <label  htmlFor='from'>From</label>
+                                <label  htmlFor='to'>To</label>
                                 <input 
                                 className='form-input' 
                                 type='number' 
-                                id='from'
-                                value={price[1]}
-                                onChange={e=>setPrice(prev => prev.map((el,index)=> index === 1 ? e.target.value:el))}
+                                id='to'
+                                value={price.to}
+                                onChange={e=>setPrice(prev => ({...prev,to : e.target.value}))}
                                 >
                                     
                                 </input>

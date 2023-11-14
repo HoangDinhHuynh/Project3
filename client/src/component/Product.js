@@ -5,7 +5,6 @@ import labelTrend from '../assets/label-trend.png'
 import {SelectOption} from './'
 import icons from '../ultils/icon'
 import { Link } from "react-router-dom";
-import path from "../ultils/path";
 
 const {AiFillEye,BiMenu, BsFillSuitHeartFill}  = icons
 

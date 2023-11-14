@@ -1,8 +1,9 @@
 import React, { useEffect, useState, useCallback } from 'react'
-import { useParams, useSearchParams } from 'react-router-dom'
-import { Breadcrumb, Product, SearchItem } from '../../component'
+import { useParams, useSearchParams ,createSearchParams,useNavigate} from 'react-router-dom'
+import { Breadcrumb, Product, SearchItem,InputSelect } from '../../component'
 import { apiGetProducts } from '../../apis'
 import Masonry from 'react-masonry-css'
+import { sorts } from '../../ultils/contants'
 
 const breakpointColumnsObj = {
   default: 4,
@@ -13,9 +14,11 @@ const breakpointColumnsObj = {
 
 const Products = () => {
 
+  const navigate = useNavigate()
   const [products, setProducts] = useState(null)
   const [activeClick, setActiveClick] = useState(null)
   const [params] = useSearchParams()
+  const [sort, setSort] = useState('')
 
   const fecthProductByCategory = async (queries) => {
     const response = await apiGetProducts(queries)
@@ -28,8 +31,24 @@ const Products = () => {
     for (let i of params.entries()) param.push(i)
     const queries = {}
     for (let i of params) queries[i[0]] = i[1]
-    console.log(param)
-    fecthProductByCategory(queries)
+
+  
+  // console.log(queries.from)
+  let priceQuery = {}
+  if(queries.to && queries.from){
+    priceQuery = {$and:[
+      {price:{gte:queries.from}},
+      {price:{lte:queries.to}}
+    ]}
+    delete queries.price
+   
+  }
+    if(queries.from )  queries.price = {gte : queries.from}
+    if(queries.to ) queries.price = {lte : queries.to}
+    delete queries.to
+    delete queries.from
+    const q = {...priceQuery,...queries}
+    fecthProductByCategory(q)
   }, [params])
 
   const ChangeActiveFilter = useCallback((name) => {
@@ -37,6 +56,16 @@ const Products = () => {
     else setActiveClick(name)
   }, [activeClick])
 
+  const changeValue = useCallback((value) => { 
+    setSort(value)
+   },[sort])
+
+  useEffect(() => { 
+    navigate({
+      pathname : `/${category}`,
+      search : createSearchParams({ sort }).toString()
+  })
+   },[sort])
   return (
     <div className='w-full'>
       <div className='h-[81px] flex justify-center items-center bg-gray-100 '>
@@ -62,8 +91,11 @@ const Products = () => {
             />
           </div>
         </div>
-        <div className='w-1/5'>
-          SortBy
+        <div className='w-1/5  flex flex-col gap-3'>
+        <span className='font-semibold text-sm'>Sort By</span>
+        <div className='w-full'>
+          <InputSelect changeValue={changeValue} value={sort} options={sorts}  />
+        </div>
         </div>
       </div>
       <div className='mt-8 w-main m-auto '>
