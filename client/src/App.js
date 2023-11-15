@@ -3,17 +3,21 @@ import {Route,Routes} from 'react-router-dom'
 import {Login,Home,Public,FAQ,DetailProduct,Blogs,Services,Products,FinalRegister,ResetPassword } from './pages/publics'
 import path from './ultils/path'
 import {getCategories} from './store/app/asyncAction'
-import {useDispatch} from 'react-redux'
+import {useDispatch,useSelector} from 'react-redux'
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import {Modal} from './component'
 
 function App() {
   const dispatch = useDispatch()
+  const {isShowModal ,modalChildren} = useSelector(state => state.app)
+
   useEffect(()=>{
     dispatch(getCategories())
   },[dispatch])
   return (
-    <div className="min-h-screen font-main">
+    <div className="font-main relative">
+      {isShowModal && <Modal>{modalChildren}</Modal>}
       <Routes>
 
         <Route path={path.PUBLIC} element={<Public />}>

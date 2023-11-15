@@ -44,6 +44,7 @@ const DetailProduct = () => {
       fetchProductData()
       fetchProducts()
     }
+    window.scrollTo(0,0)
    },[pid])
 
   const handleQuantity = useCallback((number) => { 
@@ -134,7 +135,11 @@ const DetailProduct = () => {
             </div>
       </div>
       <div className='w-main m-auto mt-8'>
-        <ProductInfomation totalRating={product?.totalRating} totalCount={18}/>
+        <ProductInfomation 
+        totalRating={product?.totalRating} 
+        totalCount={18}
+        nameProduct={product?.tiltle}
+        />
       </div>
         <div className='w-main m-auto mt-8'>
             <h3 className="text-[20px] font-semibold py-[15px] border-b-2 border-main">OTHER CUSTOMERS ALSO LIKED :</h3>
