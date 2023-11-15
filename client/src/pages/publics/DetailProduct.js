@@ -27,6 +27,7 @@ const DetailProduct = () => {
   const [currentImage, setCurrentImage] = useState(null)
   const [quantity, setQuantity] = useState(1)
   const [relatedProducts, setRelatedProducts] = useState(null)
+  const [update, setUpdate] = useState(false)
   // console.log(pid , tiltle) 
   const fetchProductData = async () => {  
     const response = await apiGetProduct(pid)
@@ -46,6 +47,13 @@ const DetailProduct = () => {
     }
     window.scrollTo(0,0)
    },[pid])
+   useEffect(() => { 
+    if(pid)   fetchProductData()
+   },[update])
+
+   const reRender = useCallback(() => { 
+      setUpdate(!update)
+    },[update])
 
   const handleQuantity = useCallback((number) => { 
     if(!Number(number) || Number(number) < 1) {
@@ -135,10 +143,12 @@ const DetailProduct = () => {
             </div>
       </div>
       <div className='w-main m-auto mt-8'>
-        <ProductInfomation 
+        <ProductInfomation
+        pid={product?._id} 
         totalRating={product?.totalRating} 
-        totalCount={18}
+        ratings={product?.ratings}
         nameProduct={product?.tiltle}
+        reRender={reRender}
         />
       </div>
         <div className='w-main m-auto mt-8'>
