@@ -1,6 +1,6 @@
 import React, { memo, useState,useCallback } from 'react'
 import {productInfoTabs} from '../ultils/contants'
-import {Votebar ,Button, VoteOption} from './'
+import {Votebar ,Button, VoteOption ,Comment} from './'
 import { renderStarFromNumber} from '../ultils/helpers'
 import { apiRatings } from '../apis' 
 import { useDispatch,useSelector } from 'react-redux'
@@ -24,7 +24,7 @@ const ProductInfomation = ({totalRating ,ratings,nameProduct,pid,reRender}) => {
           alert('Please vote went click submit')
           return
       }
-      await apiRatings({pid,star:score ,comment})
+      await apiRatings({pid,star:score ,comment,updatedAt:Date.now()})
       dispatch(showModal({isShowModal:false,modelChildren:null}))
       reRender()
       }
@@ -56,23 +56,22 @@ const ProductInfomation = ({totalRating ,ratings,nameProduct,pid,reRender}) => {
             >{el.name}</span>
             
         ))}
-        <div 
-            onClick={()=>setActivedTab(5)}
-            className={`py-2 px-4 cursor-pointer ${activedTab === 5 ? 'bg-white border border-b-0':'bg-gray-200'}`}
-            >CUSTOMER REVIEW</div>
+       
         </div>
         <div className='w-full border p-4'>
             {productInfoTabs.some(el => el.id === activedTab) && productInfoTabs.find(el => el.id === activedTab)?.content}
-            {activedTab === 5 && <div className='flex flex-col p-4'>
-                  <div className='flex '>
-                  <div className='flex-4 flex flex-col items-center justify-center border border-red-500 gap-2'>
+            
+        </div>
+        <div className='flex flex-col py-8 w-main'>
+                  <div className='flex border'>
+                  <div className='flex-4 flex flex-col items-center justify-center   gap-2'>
                     <span className='font-semibold text-3xl'>{`${totalRating}/5`}</span>
                     <span className='flex items-center gap-1'>{renderStarFromNumber(totalRating)?.map((el,index) => (
                       <span key={index}>{el}</span>
                     ))}</span>
                     <span className='text-sm'>{`${ratings?.length} reviewers and commentor`}</span>
                   </div>
-                  <div className='flex-6 gap-2 border flex flex-col p-4'>
+                  <div className='flex-6 gap-2  flex flex-col p-4'>
                     {Array.from(Array(5).keys()).reverse().map(el =>(
                       <Votebar
                         key={el}
@@ -89,9 +88,18 @@ const ProductInfomation = ({totalRating ,ratings,nameProduct,pid,reRender}) => {
                     Vote Now !
                   </Button>
               </div>
-              </div>}
-        </div>
-        
+              <div className='flex flex-col gap-4'>
+                 {ratings?.map(el => (
+                    <Comment 
+                    key={el._id}
+                    star={el.star}
+                    updatedAt={el.updatedAt}
+                    comment={el.comment}
+                    name={`${el.postedBy?.lastname} ${el.postedBy?.firstname} `}
+                    />
+                 ))}
+              </div>
+              </div>
     </div>
   )
 }

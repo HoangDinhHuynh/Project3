@@ -13,7 +13,7 @@ const settings = {
   dots: false,
   infinite: true,
   speed: 500,
-  slidesToShow: 4,
+  slidesToShow: 3,
   slidesToScroll: 1,
   // autoplay: false,
   // autoplaySpeed: 3500,
@@ -99,7 +99,7 @@ const DetailProduct = () => {
                 <Slider className='images-slider flex gap-2'{...settings}>
                   {product?.images?.map(el => (
                     <div key={el} className=''>
-                      <img onClick={e => handleClickImage(e,el)} src={el} alt='sub-product' className='cursor-pointer h-[100px] w-[100px] border object-contain' />
+                      <img onClick={e => handleClickImage(e,el)} src={el} alt='sub-product' className='cursor-pointer h-[135px] w-[135px] border object-contain' />
                     </div>
                   ))}
                 </Slider>
