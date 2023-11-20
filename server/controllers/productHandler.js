@@ -125,7 +125,6 @@ const ratings = asyncHanlder(async(req,res)=>{
     if (!star || !pid) throw new Error('Missing Inputs')
     const ratingProduct = await Product.findById(pid)
     const alreadyRating = ratingProduct?.ratings?.find(el => el.postedBy.toString() === _id )
-    console.log({alreadyRating})
     // console.log(alreadyRating);
     if(alreadyRating){
         // update star & comment

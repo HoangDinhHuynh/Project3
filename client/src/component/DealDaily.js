@@ -18,7 +18,7 @@ const DealDaily = () =>{
     const [expireTime,setExpireTime] = useState(false)
 
     const fetchDealDaily = async() => {
-        const response = await apiGetProducts({limit:1,page:Math.round(Math.random()*7),totalRating:5})
+        const response = await apiGetProducts({limit:1,page:Math.round(Math.random()*1),totalRating:5})
         if (response.success) {
             setDealDaily(response.products[0])
             const today = `${moment().format('MM/DD/YYYY')} 5:00:00`
