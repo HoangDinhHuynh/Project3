@@ -1,16 +1,19 @@
 import React, { memo ,useEffect} from 'react'
-import { Link } from 'react-router-dom'
-import path from '../ultils/path'
-import { getCurrent } from '../store/user/asyncAction'
+import { Link ,useNavigate} from 'react-router-dom'
+import path from 'ultils/path'
+import { getCurrent } from 'store/user/asyncAction'
 import { useDispatch,useSelector } from 'react-redux'
-import icons from '../ultils/icon'
-import { logout } from '../store/user/userSlice'
+import icons from 'ultils/icon'
+import { logout ,clearMessage} from 'store/user/userSlice'
+import Swal from 'sweetalert2'
+
 
 
 const {AiOutlineLogout} = icons
 const TopHeader = () => {
     const dispatch = useDispatch()
-    const {isLoggedIn ,current} = useSelector(state => state.user)
+    const navigate = useNavigate()
+    const {isLoggedIn ,current,mes} = useSelector(state => state.user)
 
     useEffect(() => { 
       const setTimeOutId = setTimeout(() => { 
@@ -20,11 +23,18 @@ const TopHeader = () => {
         clearTimeout(setTimeOutId)
       }
      },[dispatch,isLoggedIn])
+
+     useEffect(() => { 
+        if(mes) Swal.fire('Oops!',mes,'info').then(() => { 
+            dispatch(clearMessage())
+            navigate(`${path.LOGIN}`)
+         })
+      },[mes])
   return (
     <div className='h-[38px] w-full bg-main flex items-center justify-center'>
         <div className='w-main flex items-center justify-between text-xs text-white'>
                 <span>ORDER ONLINE OR CALL US (+1800) 000 8808</span>
-                {isLoggedIn 
+                {isLoggedIn && current
                 ? <div className='flex gap-4 text-sm items-center'>
                     <span>{`Welcome, ${current?.firstname} ${current?.lastname}`}</span>
                     <span
