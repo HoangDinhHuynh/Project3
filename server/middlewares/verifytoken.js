@@ -25,7 +25,7 @@ const verifyAccessToken = asyncHanlder(async(req,res,next)=>{
 // HÀM KIỂM TRA QUYỀN CỦA USER
 const isAdmin = asyncHanlder((req,res,next)=>{
     const {role} = req.user
-    if (role !== 'admin') 
+    if (+role !== 2000) 
     return res.status(401).json({
         success : false,
         mes: 'REQUIRE ADMIN ROLE !'

@@ -203,7 +203,7 @@ const getAllUsers = asyncHanlder(async(req,res)=>{
 // HÀM LẤY RA THÔNG TIN CỦA 1 NGƯỜI DÙNG
 const getCurrent = asyncHanlder(async(req,res)=>{
     const {_id} = req.user
-    const user = await User.findById(_id).select('-refreshToken -password -role')
+    const user = await User.findById(_id).select('-refreshToken -password')
     return res.status(200).json({
         success: user ? true : false,
         rs : user ? user : 'User not found'

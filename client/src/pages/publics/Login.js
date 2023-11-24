@@ -1,11 +1,12 @@
 import React,{useState,useCallback, useEffect} from "react";
 import bg_login from '../../assets/bg-login2.jpg'
-import {InputField,Button} from '../../component'
+import {InputField,Button, Loading} from '../../component'
 import { apiRegister,apiLogin,apiForgotPassword,apiFinalRegister } from "../../apis/user";
 import Swal from 'sweetalert2'
 import { useNavigate ,Link} from "react-router-dom";
 import path from "../../ultils/path";
 import {login} from '../../store/user/userSlice'
+import { showModal } from 'store/app/appSlice'
 import { useDispatch } from "react-redux";
 import { toast } from "react-toastify";
 import { validate } from "../../ultils/helpers";
@@ -55,7 +56,9 @@ const Login = () =>{
         console.log(invalids)
         if (invalids === 0){
             if(isRegister){
+            dispatch(showModal({isShowModal: true,modalChilren: <Loading />}))
             const response = await apiRegister(payLoad)
+            dispatch(showModal({isShowModal: false,modalChilren: null}))
             if(response.success){
                 setIsVerifiedEmail(true)
                 
