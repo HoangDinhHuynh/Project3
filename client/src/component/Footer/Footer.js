@@ -1,5 +1,5 @@
 import React, { memo } from 'react'
-import icons from '../ultils/icon'
+import icons from '../../ultils/icon'
 
 
 const { MdEmail } = icons

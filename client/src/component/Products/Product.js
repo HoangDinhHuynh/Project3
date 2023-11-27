@@ -1,9 +1,9 @@
-import React,{useState} from "react";
-import {formatMoney,renderStarFromNumber } from "../ultils/helpers"
-import label from '../assets/label.webp'
-import labelTrend from '../assets/label-trend.png'
-import {SelectOption} from './'
-import icons from '../ultils/icon'
+import React,{useState,memo} from "react";
+import {formatMoney,renderStarFromNumber } from "../../ultils/helpers"
+import label from 'assets/label.webp'
+import labelTrend from 'assets/label-trend.png'
+import {SelectOption} from '..'
+import icons from 'ultils/icon'
 import { Link } from "react-router-dom";
 
 const {AiFillEye,BiMenu, BsFillSuitHeartFill}  = icons
@@ -51,4 +51,4 @@ const Product = ({productData, isNew , normal}) =>{
     )
 }
 
-export default Product
+export default memo(Product)

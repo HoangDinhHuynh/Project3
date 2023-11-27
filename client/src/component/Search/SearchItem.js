@@ -1,9 +1,9 @@
 import React,{memo,useEffect,useState} from 'react'
-import icons from '../ultils/icon'
-import { colors } from '../ultils/contants'
+import icons from '../../ultils/icon'
+import { colors } from '../../ultils/contants'
 import { createSearchParams,useNavigate,useParams ,useSearchParams} from 'react-router-dom'
-import { apiGetProducts } from '../apis'
-import useDebounce from '../hooks/useDebounce'
+import { apiGetProducts } from '../../apis'
+import useDebounce from '../../hooks/useDebounce'
 
 
 const {FaChevronDown} =icons

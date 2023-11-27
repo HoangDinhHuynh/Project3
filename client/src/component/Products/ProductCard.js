@@ -1,5 +1,5 @@
-import React from "react";
-import {formatMoney,renderStarFromNumber} from '../ultils/helpers' 
+import React,{memo} from "react";
+import {formatMoney,renderStarFromNumber} from '../../ultils/helpers' 
 
 const ProductCard = ({price,totalRating,tiltle,image}) =>{
     return(
@@ -18,4 +18,4 @@ const ProductCard = ({price,totalRating,tiltle,image}) =>{
     )
 }
 
-export default ProductCard
+export default memo(ProductCard)
