@@ -6,7 +6,7 @@ import clsx from 'clsx'
 import { FaCaretDown,FaCaretRight } from 'react-icons/fa'
 
 
-const activedStyle = 'px-4 py-2 flex items-center gap-2  bg-blue-500'
+const activedStyle = 'px-4 py-2 flex items-center gap-2 text-white bg-blue-500'
 const notAtivedStyle = 'px-4 py-2 flex items-center gap-2  hover:bg-blue-100'
 
 const AdminSidebar = () => {

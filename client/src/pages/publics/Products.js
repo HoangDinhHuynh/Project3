@@ -27,13 +27,12 @@ const Products = () => {
   const { category } = useParams()
 
   useEffect(() => {
-    let param = []
-    for (let i of params.entries()) param.push(i)
-    const queries = {}
-    for (let i of params) queries[i[0]] = i[1]
-
+    // let param = []
+    // for (let i of params.entries()) param.push(i)
+    // const queries = {}
+    // for (let i of params) queries[i[0]] = i[1]
   
-  // console.log(queries.from)
+  const queries = Object.fromEntries([...params])
   let priceQuery = {}
   if(queries.to && queries.from){
     priceQuery = {$and:[

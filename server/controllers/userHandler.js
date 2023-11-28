@@ -206,6 +206,21 @@ const getAllUsers = asyncHanlder(async(req,res)=>{
 
     // Filtering
     if (queries?.name) restQueries.name = {$regex: queries.name ,$options: 'i'}
+    // const query = {}
+    // if(req.query.q){
+    //     query = {$or : [
+    //         {name : {$regex: req.query.q ,$options: 'i'}},
+    //         {email : {$regex: req.query.q ,$options: 'i'}}
+    //     ]}
+    // }
+    if(req.query.q){
+        delete restQueries.q
+        restQueries['$or'] = [
+            {firstname : {$regex: req.query.q ,$options: 'i'}},
+            {lastname : {$regex: req.query.q ,$options: 'i'}},
+            {email : {$regex: req.query.q ,$options: 'i'}}
+        ]}
+    
     let queryCommand = User.find(restQueries)
 
     // Sorting
@@ -219,6 +234,7 @@ const getAllUsers = asyncHanlder(async(req,res)=>{
         const fields = req.query.fields.split(',').join(' ')
         queryCommand = queryCommand.select(fields)
     }
+  
 
     // Pagination
     const page = +req.query.page || 1
