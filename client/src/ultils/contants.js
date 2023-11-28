@@ -237,3 +237,14 @@ const {RiTruckFill,FaShieldAlt,BsReplyFill,FaTty,AiFillGift} = icons
         icon : <RiBillLine size={20}/>
     },
  ]
+
+ export const roles = [
+    {
+        code: 2000,
+        value : 'Admin'
+    },
+    {
+        code: 1000,
+        value : 'User'
+    },
+ ]

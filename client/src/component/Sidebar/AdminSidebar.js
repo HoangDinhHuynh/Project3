@@ -47,7 +47,7 @@ const AdminSidebar = () => {
                     key={item.text} 
                     to={item.path}
                     onClick={e => e.stopPropagation()}
-                    className={({isActive}) => clsx(isActive && activedStyle , !isActive && notAtivedStyle, 'pl-10')}
+                    className={({isActive}) => clsx(isActive && activedStyle , !isActive && notAtivedStyle, 'pl-16 text-sm')}
                     >
                       {item.text}
                     </NavLink>
