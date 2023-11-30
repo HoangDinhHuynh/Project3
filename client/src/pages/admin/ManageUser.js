@@ -1,6 +1,6 @@
 import React, { useEffect,useState,useCallback} from 'react'
 import { apiGetUsers,apiUpdateUser,apiDeleteUser } from 'apis/user'
-import { roles } from 'ultils/contants'
+import { roles,blockStatus } from 'ultils/contants'
 import { InputField,Pagination,InputForm,Select ,Button} from 'component'
 import moment from 'moment'
 import useDebounce from 'hooks/useDebounce'
@@ -8,6 +8,7 @@ import { useSearchParams } from 'react-router-dom'
 import { useForm } from 'react-hook-form'
 import { toast } from 'react-toastify'
 import Swal from 'sweetalert2'
+import clsx from 'clsx'
 
 const ManageUser = () => {
 
@@ -17,7 +18,7 @@ const ManageUser = () => {
     lastname:'',
     role:'',
     phone:'',
-    status:''
+    isBlocked:''
   })
   const [users, setUsers] = useState(null)
   const [queries, setQueries] = useState({
@@ -66,7 +67,7 @@ const ManageUser = () => {
          })
    }
   return (
-    <div className='w-full'>
+    <div className={clsx('w-full', editElm && 'pl-12')}>
       <h1 className='h-[75px] flex justify-between items-center text-3xl font-bold px-4 border-b'>
         <span>Manage Users</span>
       </h1>
@@ -82,7 +83,7 @@ const ManageUser = () => {
           />
         </div>
         <form onSubmit={handleSubmit(hanldeUpdate)}>
-          {editElm && <Button type='submit'>Update</Button>}
+          
           <table className='table-auto mb-6 text-left w-full'>
             <thead className='font-bold bg-gray-700 text-[13px]  text-white'>
               <tr className='border border-gray-500'>
@@ -134,7 +135,15 @@ const ManageUser = () => {
                     validate={{ required: 'Require fill.' }}
 
                   /> : <span>{el.lastname}</span>}</td>
-                  <td className='py-2 px-4'>{editElm?._id === el._id ? <Select /> : <span>{roles.find(role => +role.code === +el.role)?.value}</span>}</td>
+                  <td className='py-2 px-4'>{editElm?._id === el._id ? <Select 
+                    register={register}
+                    fullWidth
+                    errors={errors}
+                    defaultValue={+el.role}
+                    id={'role'}
+                    validate={{ required: 'Require fill.' }}
+                    options={roles}
+                  /> : <span>{roles.find(role => +role.code === +el.role)?.value}</span>}</td>
                   <td className='py-2 px-4'>{editElm?._id === el._id ? <InputForm
                     register={register}
                     fullWidth
@@ -150,7 +159,15 @@ const ManageUser = () => {
                    }}
 
                   /> : <span>{el.mobile}</span>}</td>
-                  <td className='py-2 px-4'>{editElm?._id === el._id ? <Select /> : <span>{el.isBlocked ? 'Blocked' : 'Active'}</span>}</td>
+                  <td className='py-2 px-4'>{editElm?._id === el._id ? <Select
+                    register={register}
+                    fullWidth
+                    errors={errors}
+                    defaultValue={el.isBlocked}
+                    id={'isBlocked'}
+                    validate={{ required: 'Require fill.' }}
+                    options={blockStatus}
+                  /> : <span>{el.isBlocked ? 'Blocked' : 'Active'}</span>}</td>
                   <td className='py-2 px-4'>{moment(el.createdAt).format('DD/MM/YYYY')}</td>
                   <td className='py-2 px-4'>
                     {editElm?._id === el._id 
@@ -163,6 +180,7 @@ const ManageUser = () => {
               ))}
             </tbody>
           </table>
+          {editElm && <Button type='submit'>Update</Button>}
         </form>
         <div className='w-full flex justify-end'>
           <Pagination
