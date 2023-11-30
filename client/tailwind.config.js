@@ -95,7 +95,8 @@ module.exports = {
         'slide-top-sm' : 'slide-top-sm 0.2s linear both;',
         'slide-bot-sm' : 'slide-bot-sm 0.2s linear both;',
         'slide-bottom' : 'slide-bottom 0.5s cubic-bezier(0.250, 0.460, 0.450, 0.940) both;',
-        'scale-up-center': 'scale-up-center 0.4s cubic-bezier(0.390, 0.575, 0.565, 1.000) both;'
+        'scale-up-center': 'scale-up-center 0.4s cubic-bezier(0.390, 0.575, 0.565, 1.000) both;',
+        'scale-up-center-fast': 'scale-up-center 0.15s cubic-bezier(0.390, 0.575, 0.565, 1.000) both;'
       }
     },
   },

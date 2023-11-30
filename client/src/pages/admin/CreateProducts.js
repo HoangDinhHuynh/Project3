@@ -1,8 +1,10 @@
-import React, { useCallback, useState } from 'react'
+import React, { useCallback, useState, useEffect } from 'react'
 import { InputForm,Select,Button,MarkdownEditor } from 'component'
 import { useForm } from 'react-hook-form'
 import { useSelector } from 'react-redux'
-import { validate } from 'ultils/helpers'
+import { validate, getBase64 } from 'ultils/helpers'
+import { toast } from 'react-toastify'
+import { IoTrashBinSharp } from "react-icons/io5";
 
 const CreateProducts = () => {
 
@@ -11,11 +13,37 @@ const CreateProducts = () => {
   const [payload, setPayload] = useState({
     description : ''
   })
-
+  const [preview, setPreview] = useState({
+    thumb: null,
+    images : []
+  })
   const [invalidFields, setInvalidFields] = useState([])
   const changeValue = useCallback((e) => { 
       setPayload(e)
    },[payload])
+  const [hoverElm, setHoverElm] = useState(null)
+  const hanldePreviewThumb = async(file) =>  {
+      const base64Thumb = await getBase64(file)
+      setPreview(prev => ({...prev, thumb : base64Thumb}))
+  }
+  const hanldePreviewImanges = async (files) => { 
+      const imagesPreview = []
+      for (let file of files){
+          if(file.type !== 'image/png' && file.type !== 'image/jpeg'){
+              toast.warning('File not supported !')
+              return
+          }
+          const base64 = await getBase64(file)
+          imagesPreview.push({name : file.name, path : base64})
+        }
+        setPreview(prev => ({...prev, images : imagesPreview}))
+   }
+  useEffect(() => { 
+    hanldePreviewThumb(watch('thumb')[0])
+   },[watch('thumb')])
+   useEffect(() => { 
+    hanldePreviewImanges(watch('images'))
+   },[watch('images')])
 
   const hanldeCreateProduct = (data) => {
     const invalids = validate(payload,setInvalidFields)
@@ -27,6 +55,13 @@ const CreateProducts = () => {
 
     }
   }
+  const handleRemoveImage = (name) => { 
+    const files = [...watch('images')]
+      reset({
+        images : files?.filter(el => el.name !== name)
+      })
+      if(preview.images?.some(el => el.name === name)) setPreview(prev => ({...prev, images : prev.images?.filter(el => el.name !== name)}))
+   }
   return (
     <div className='w-full'>
       <h1 className='h-[75px] flex justify-between items-center text-3xl font-bold px-4 border-b'>
@@ -115,16 +150,36 @@ const CreateProducts = () => {
               />
               {errors['thumb'] && <small className='text-xs text-red-500'>{errors['thumb']?.message}</small>}
             </div>
+            {preview.thumb && <div className='my-4'>
+              <img src={preview.thumb} alt='thumbnail' className='w-[200px] object-contain'/>
+            </div>}
             <div className='flex flex-col gap-2 my-8'>
               <label htmlFor='products' className='font-semibold'>Upload images of product</label>
               <input 
                 type='file'
                 id='products'
                 multiple 
-                {...register('products',{required:'Need Atleast One Image'})}
+                {...register('images',{required:'Need Atleast One Image'})}
               />
-               {errors['products'] && <small className='text-xs text-red-500'>{errors['products']?.message}</small>}
+               {errors['images'] && <small className='text-xs text-red-500'>{errors['images']?.message}</small>}
             </div>
+            {preview.images.length > 0 && <div className='my-4 flex w-full gap-3 flex-wrap'>
+              {preview.images?.map((el,idx) => (
+                <div 
+                  onMouseEnter={() => setHoverElm(el.name)} 
+                  key={idx} 
+                  className='w-fit relative'
+                  onMouseLeave={() => setHoverElm(null)} 
+                >
+                      <img  src={el.path} alt='product' className='w-[200px] object-contain'/>
+                      {hoverElm === el.name && <div 
+                        className='absolute animate-scale-up-center-fast cursor-pointer inset-0 bg-overlay flex items-center justify-center'
+                        onClick={() => handleRemoveImage(el.name)}
+                      >
+                        <IoTrashBinSharp size={24} color='white'/></div>}
+                </div>
+              ))}
+            </div>}
             <MarkdownEditor 
               name='description'
               changeValue={changeValue}
