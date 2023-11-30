@@ -1,9 +1,9 @@
 import React, { memo } from 'react'
-import { CircleLoader } from 'react-spinners'
+import { BounceLoader } from 'react-spinners'
 
 const Loading = () => {
   return (
-    <CircleLoader className='z-10' color='#ee3131'/>
+    <BounceLoader className='z-50' color='#ee3131'/>
   )
 }
 

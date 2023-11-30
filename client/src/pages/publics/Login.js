@@ -56,9 +56,9 @@ const Login = () =>{
         console.log(invalids)
         if (invalids === 0){
             if(isRegister){
-            dispatch(showModal({isShowModal: true,modalChilren: <Loading />}))
+            dispatch(showModal({isShowModal: true,modalChildren: <Loading />}))
             const response = await apiRegister(payLoad)
-            dispatch(showModal({isShowModal: false,modalChilren: null}))
+            dispatch(showModal({isShowModal: false,modalChildren: null}))
             if(response.success){
                 setIsVerifiedEmail(true)
                 
@@ -86,7 +86,7 @@ const Login = () =>{
     }
     return(
         <div className="w-screen h-screen relative">
-            {isVerifiedEmail && <div className="absolute top-0 left-0 bottom-0 right-0 flex flex-col justify-center items-center bg-overlay z-50 animate-scale-up-center">
+            {isVerifiedEmail && <div className="absolute top-0 left-0 bottom-0 right-0 flex flex-col justify-center items-center bg-overlay z-20 animate-scale-up-center">
                 <div className="bg-white w-[500px] rounded-md p-8">
                     <h4 className="">We sent a code to your mail. Please check your mail and enter your code:</h4>
                     <input 
@@ -138,14 +138,16 @@ const Login = () =>{
                 <div className="p-8 flex flex-col items-center bg-white rounded-md min-w-[500px] shadow-xl ">
                     <h1 className="text-[28px] font-semibold text-main mb-8">{isRegister ? 'Register' : 'Login'}</h1>
                     {isRegister &&  <div className="flex items-center gap-2">
-                        <InputField 
+                        <InputField
+                        fullWidth 
                     value={payLoad.firstname}
                     setValue={setPayLoad}
                     nameKey='firstname'
                     invalidFields={invalidFields}
                     setInvalidFields={setInvalidFields}
                     />
-                        <InputField 
+                        <InputField
+                        fullWidth 
                     value={payLoad.lastname}
                     setValue={setPayLoad}
                     nameKey='lastname'
@@ -154,21 +156,24 @@ const Login = () =>{
                     />
                     </div>
                     }
-                    <InputField 
+                    <InputField
+                    fullWidth 
                     value={payLoad.email}
                     setValue={setPayLoad}
                     nameKey='email'
                     invalidFields={invalidFields}
                     setInvalidFields={setInvalidFields}
                     />
-                    {isRegister && <InputField 
+                    {isRegister && <InputField
+                    fullWidth 
                     value={payLoad.mobile}
                     setValue={setPayLoad}
                     nameKey='mobile'
                     invalidFields={invalidFields}
                     setInvalidFields={setInvalidFields}
                     />}
-                    <InputField 
+                    <InputField
+                    fullWidth 
                     value={payLoad.password}
                     setValue={setPayLoad}
                     nameKey='password'
