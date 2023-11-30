@@ -1,18 +1,32 @@
-import React from 'react'
-import { InputForm,Select,Button } from 'component'
+import React, { useCallback, useState } from 'react'
+import { InputForm,Select,Button,MarkdownEditor } from 'component'
 import { useForm } from 'react-hook-form'
 import { useSelector } from 'react-redux'
+import { validate } from 'ultils/helpers'
 
 const CreateProducts = () => {
 
   const {categories} = useSelector(state => state.app)
   const {register, formState:{errors}, reset, handleSubmit, watch} = useForm()
+  const [payload, setPayload] = useState({
+    description : ''
+  })
+
+  const [invalidFields, setInvalidFields] = useState([])
+  const changeValue = useCallback((e) => { 
+      setPayload(e)
+   },[payload])
+
   const hanldeCreateProduct = (data) => {
-    if(data.category) data.category = categories?.find(el => el._id === data.category)?.tiltle
-    console.log(data)
+    const invalids = validate(payload,setInvalidFields)
+    if(invalids === 0) {
+      if(data.category) data.category = categories?.find(el => el._id === data.category)?.tiltle
+      const finalPayload = {...data, ...payload}
+      const formData = new FormData()
+      for(let i  of  Object.entries(finalPayload)) formData.append(i[0] ,i[1] )
+
+    }
   }
-
-
   return (
     <div className='w-full'>
       <h1 className='h-[75px] flex justify-between items-center text-3xl font-bold px-4 border-b'>
@@ -92,7 +106,35 @@ const CreateProducts = () => {
                 fullWidth
               />
             </div>
-            <Button type='submit'>Create New Product</Button>
+            <div className='flex flex-col gap-2 mt-8'>
+              <label htmlFor='thumb' className='font-semibold'>Upload thumb</label>
+              <input 
+                type='file' 
+                id='thumb'
+                {...register('thumb',{required:'Need One Image'})}
+              />
+              {errors['thumb'] && <small className='text-xs text-red-500'>{errors['thumb']?.message}</small>}
+            </div>
+            <div className='flex flex-col gap-2 my-8'>
+              <label htmlFor='products' className='font-semibold'>Upload images of product</label>
+              <input 
+                type='file'
+                id='products'
+                multiple 
+                {...register('products',{required:'Need Atleast One Image'})}
+              />
+               {errors['products'] && <small className='text-xs text-red-500'>{errors['products']?.message}</small>}
+            </div>
+            <MarkdownEditor 
+              name='description'
+              changeValue={changeValue}
+              label='Desciption'
+              invalidFields={invalidFields}
+              setInvalidFields={setInvalidFields}
+            />
+            <div className='my-8'>
+              <Button  type='submit'>Create New Product</Button>
+            </div>
         </form>
       </div>
     </div>
