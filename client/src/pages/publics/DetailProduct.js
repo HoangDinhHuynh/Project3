@@ -6,6 +6,7 @@ import Slider from 'react-slick'
 import ReactImageMagnify from 'react-image-magnify';
 import {formatPrice,formatMoney,renderStarFromNumber} from '../../ultils/helpers'
 import { productExtraInfomation} from '../../ultils/contants'
+import  DOMPurify from 'dompurify';
 
 
 
@@ -115,7 +116,8 @@ const DetailProduct = () => {
                 <span className='text-sm text-main italic'>{`(Sold : ${product?.sold} items)`}</span>
               </div>
               <ul className='text-sm text-gray-500 list-square pl-4'>
-                {product?.description?.map(el => (<li className='leading-6' key={el}>{el}</li>))}
+                {product?.description?.length > 1 && product?.description?.map(el => (<li className='leading-6' key={el}>{el}</li>))}
+                {product?.description?.length === 1 && <div className='text-sm' dangerouslySetInnerHTML={{ __html : DOMPurify.sanitize(product?.description[0])}}></div>}
               </ul>
               <div className='flex flex-col gap-8'>
                 <div className='flex items-center gap-4'>

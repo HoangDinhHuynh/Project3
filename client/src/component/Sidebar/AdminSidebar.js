@@ -1,7 +1,7 @@
 import React,{ memo ,Fragment,useState} from 'react'
 import logo from 'assets/logo.png'
 import { adminSidebar } from 'ultils/contants'
-import { NavLink } from 'react-router-dom'   
+import { Link, NavLink } from 'react-router-dom'   
 import clsx from 'clsx'
 import { FaCaretDown,FaCaretRight } from 'react-icons/fa'
 
@@ -19,10 +19,10 @@ const AdminSidebar = () => {
 
   return (
     <div className='bg-white h-full py-4'>
-      <div className='flex flex-col justify-center items-center p-4 gap-2'>
+      <Link to={'/'} className='flex flex-col justify-center items-center p-4 gap-2'>
         <img src={logo} alt='logo' className='w-[200px] object-contain' />
         <small>Admin Workspace</small>
-      </div>
+      </Link>
       <div>
         {adminSidebar.map(el=>(
           <Fragment key={el.id}>

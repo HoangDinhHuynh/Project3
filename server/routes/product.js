@@ -5,7 +5,10 @@ const uploader = require('../config/cloudinary.config')
 
 
 
-router.post('/createproduct',[verifyAccessToken,isAdmin],ctrls.createProduct)
+router.post('/createproduct',[verifyAccessToken,isAdmin],uploader.fields([
+    {name : 'images' , maxCount:10},
+    {name : 'thumb' , maxCount : 1}
+]),ctrls.createProduct)
 router.get('/getallproduct',ctrls.getAllProduct)
 router.put('/ratings',[verifyAccessToken],ctrls.ratings)
 

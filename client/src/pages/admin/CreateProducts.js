@@ -4,7 +4,7 @@ import { useForm } from 'react-hook-form'
 import { useSelector } from 'react-redux'
 import { validate, getBase64 } from 'ultils/helpers'
 import { toast } from 'react-toastify'
-import { IoTrashBinSharp } from "react-icons/io5";
+import { apiCreateProduct } from 'apis'
 
 const CreateProducts = () => {
 
@@ -45,23 +45,28 @@ const CreateProducts = () => {
     hanldePreviewImanges(watch('images'))
    },[watch('images')])
 
-  const hanldeCreateProduct = (data) => {
+  const hanldeCreateProduct =  async(data) => {
     const invalids = validate(payload,setInvalidFields)
     if(invalids === 0) {
       if(data.category) data.category = categories?.find(el => el._id === data.category)?.tiltle
       const finalPayload = {...data, ...payload}
       const formData = new FormData()
       for(let i  of  Object.entries(finalPayload)) formData.append(i[0] ,i[1] )
+      if (finalPayload.thumb) formData.append('thumb', finalPayload.thumb[0])
+      if (finalPayload.images) {
+        for (let image of finalPayload.images) formData.append('images', image)
+      }
+      const respone = await apiCreateProduct (formData)
 
     }
   }
-  const handleRemoveImage = (name) => { 
-    const files = [...watch('images')]
-      reset({
-        images : files?.filter(el => el.name !== name)
-      })
-      if(preview.images?.some(el => el.name === name)) setPreview(prev => ({...prev, images : prev.images?.filter(el => el.name !== name)}))
-   }
+  // const handleRemoveImage = (name) => { 
+  //   const files = [...watch('images')]
+  //     reset({
+  //       images : files?.filter(el => el.name !== name)
+  //     })
+  //     if(preview.images?.some(el => el.name === name)) setPreview(prev => ({...prev, images : prev.images?.filter(el => el.name !== name)}))
+  //  }
   return (
     <div className='w-full'>
       <h1 className='h-[75px] flex justify-between items-center text-3xl font-bold px-4 border-b'>
@@ -172,11 +177,11 @@ const CreateProducts = () => {
                   onMouseLeave={() => setHoverElm(null)} 
                 >
                       <img  src={el.path} alt='product' className='w-[200px] object-contain'/>
-                      {hoverElm === el.name && <div 
+                      {/* {hoverElm === el.name && <div 
                         className='absolute animate-scale-up-center-fast cursor-pointer inset-0 bg-overlay flex items-center justify-center'
                         onClick={() => handleRemoveImage(el.name)}
                       >
-                        <IoTrashBinSharp size={24} color='white'/></div>}
+                        <IoTrashBinSharp size={24} color='white'/></div>} */}
                 </div>
               ))}
             </div>}

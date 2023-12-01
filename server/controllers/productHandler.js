@@ -6,8 +6,13 @@ const slugify = require('slugify')
 
 // HÀM TẠO SẢN PHẨM 
 const createProduct = asyncHanlder(async(req,res)=>{
-    if (Object.keys(req.body).length === 0) throw new Error('Missing inputs')
-    if (req.body && req.body.tiltle) req.body.slug = slugify(req.body.tiltle)
+    const {tiltle, price, description, brand, category, color} = req.body
+    const thumb = req?.files?.thumb[0]?.path
+    const images = req.files?.images?.map(el => el.path)
+    if (!(tiltle && price && description && brand && category && color)) throw new Error('Missing inputs')
+    req.body.slug = slugify(tiltle)
+    if(thumb) req.body.thumb = thumb
+    if(images) req.body.images = images
     const newProduct = await Product.create(req.body)
     return res.status(200).json({
         success : newProduct ? true : false,
