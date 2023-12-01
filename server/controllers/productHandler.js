@@ -16,7 +16,7 @@ const createProduct = asyncHanlder(async(req,res)=>{
     const newProduct = await Product.create(req.body)
     return res.status(200).json({
         success : newProduct ? true : false,
-        createProduct : newProduct ? newProduct : 'Cannot create new product'
+        mes : newProduct ? 'Created' : 'Failed'
     })
 
 })
@@ -53,17 +53,28 @@ const getAllProduct = asyncHanlder(async(req,res)=>{
     queryString = queryString.replace(/\b(gte|gt|lt|lte)\b/g, macthedEl => `$${macthedEl}`) 
     const restQueries =  JSON.parse(queryString)
     let formatedQueries = {} 
+    
+    // Filtering
     if (queries?.color) {
         delete restQueries.color
         const colorQuery = queries.color?.split(',').map(el=>({color :{$regex:el,$options:'i'}}))
         formatedQueries = {$or : colorQuery}
     }
-
-    // Filtering
     if (queries?.tiltle) restQueries.tiltle = {$regex: queries.tiltle ,$options: 'i'}
     if (queries?.category) restQueries.category ={ $regex : queries.category,$options:'i'}
-    const q = {...formatedQueries, ...restQueries}
-    let queryCommand = Product.find(q)
+    let queryObject = {}
+    if(queries?.q){
+        delete restQueries.q
+        queryObject = {$or : [
+            {color :{$regex:queries.q,$options:'i'}},
+            {tiltle :{$regex:queries.q,$options:'i'}},
+            {category :{$regex:queries.q,$options:'i'}},
+            {brand :{$regex:queries.q,$options:'i'}},
+            // {description :{$regex:queries.q,$options:'i'}},
+        ]}
+    }
+    const qr = {...formatedQueries, ...restQueries, ...queryObject}
+    let queryCommand = Product.find(qr)
 
     // Sorting
     if (req.query.sort) {
@@ -86,7 +97,7 @@ const getAllProduct = asyncHanlder(async(req,res)=>{
     // Số lượng sp thoả mãn điều kiện !== số lượng trả về 1 lần gọi api
     queryCommand.exec(async(err,response) =>{
         if (err) throw new Error(err.message)
-        const counts = await Product.find(q).countDocuments()
+        const counts = await Product.find(qr).countDocuments()
         return res.status(200).json({
             success : response ? true : false,
             counts,
