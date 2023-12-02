@@ -113,11 +113,14 @@ const getAllProduct = asyncHanlder(async(req,res)=>{
 // HÀM SỬA SẢN PHẨM
 const updateProduct = asyncHanlder(async(req,res)=>{
     const {pid} = req.params
+    const files = req?.files
+    if (files?.thumb) req.body.thumb = files?.thumb[0]?.path
+    if (files?.iamges) req.body.images = files?.images?.map(el => el.path)
     if (req.body && req.body.tiltle) req.body.slug = slugify(req.body.tiltle)
     const updatedProduct = await Product.findByIdAndUpdate(pid,req.body,{new:true})
     return res.status(200).json({
         success : updatedProduct ? true : false,
-        updatedProduct : updatedProduct ? updatedProduct : 'Cannot update products'
+        mes : updatedProduct ? 'Updated' : 'Cannot update products'
     })
 
 })
@@ -129,7 +132,7 @@ const deleteProcduct = asyncHanlder(async(req,res)=>{
     const deletedProcduct = await Product.findByIdAndDelete(pid)
     return res.status(200).json({
         success : deletedProcduct ? true : false,
-        deletedProcduct : deletedProcduct ? deletedProcduct : 'Cannot delete products'
+        mes : deletedProcduct ? 'Delete' : 'Cannot delete products'
     })
 
 })

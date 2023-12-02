@@ -1,11 +1,13 @@
 import React, { useEffect, useState,  useCallback  } from 'react'
 import { InputForm,Pagination } from 'component'
 import { useForm } from 'react-hook-form'
-import { apiGetProducts } from 'apis/product'
+import { apiGetProducts, apiDeleteProduct } from 'apis/product'
 import { useSearchParams, createSearchParams, useNavigate, useLocation } from 'react-router-dom'
+import { toast } from 'react-toastify'
 import moment from 'moment'
 import useDebounce from 'hooks/useDebounce'
 import UpdateProduct from './UpdateProduct'
+import Swal from 'sweetalert2'
 
 const ManageProducts = () => {
 
@@ -45,10 +47,29 @@ const ManageProducts = () => {
       const searchParams = Object.fromEntries([...params])
       fetchProducts(searchParams)
    },[params, update])
+  const hanldeDeleteProduct = (pid) => { 
+      Swal.fire({
+        tiltle : 'Are you sure ?',
+        text : 'Are you sure to remove this product',
+        icon : 'warning',
+        showCancelButton : true
+      }).then(async(rs)=>{
+        if(rs.isConfirmed){
+            const respone = await apiDeleteProduct(pid)
+            if(respone.success) toast.success(respone.mes)
+            else toast.error(respone.mes)
+            render()
+        }
+      })
+   }  
   return (
     <div className='w-full  flex flex-col gap-4 relative'>
       {editProduct && <div className='absolute inset-0 bg-gray-100 min-h-screen z-10'>
-        <UpdateProduct editProduct={editProduct} render={render} />
+        <UpdateProduct 
+          editProduct={editProduct} 
+          render={render} 
+          setEditProduct={setEditProduct}
+        />
       </div>}
       <div className='h-[69px] w-full'></div>
       <div className='p-4  border-b w-full bg-gray-100 flex justify-between items-center fixed top-0'>
@@ -100,7 +121,7 @@ const ManageProducts = () => {
                     <td className='text-center py-2'>{moment(el.createdAt).format('DD/MM/YYYY')}</td>
                     <td className='text-center py-2'>
                         <span onClick={() => setEditProduct(el)} className='text-blue-500 hover:underline cursor-pointer px-1'>Edit</span>
-                        <span className='text-blue-500 hover:underline cursor-pointer px-1'>Remove</span>
+                        <span onClick={() => hanldeDeleteProduct(el._id)} className='text-blue-500 hover:underline cursor-pointer px-1'>Remove</span>
                     </td>
                 </tr>
               ))}
