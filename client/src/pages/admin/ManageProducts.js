@@ -1,20 +1,26 @@
-import React, { useEffect,useState } from 'react'
+import React, { useEffect, useState,  useCallback  } from 'react'
 import { InputForm,Pagination } from 'component'
 import { useForm } from 'react-hook-form'
 import { apiGetProducts } from 'apis/product'
 import { useSearchParams, createSearchParams, useNavigate, useLocation } from 'react-router-dom'
 import moment from 'moment'
 import useDebounce from 'hooks/useDebounce'
+import UpdateProduct from './UpdateProduct'
 
 const ManageProducts = () => {
 
   const location = useLocation()
   const navigate = useNavigate() 
   const [params] = useSearchParams()
-  const {register, formState:{errors}, handleSubmit, reset, watch} = useForm() 
+  const {register, formState:{errors}, watch} = useForm() 
   const [products, setProducts] = useState(null) 
   const [counts, setCounts] = useState(0)
+  const [editProduct, setEditProduct] = useState(null)
+  const [update, setUpdate] = useState(false)
 
+  const render = useCallback(() => { 
+      setUpdate(!update)
+   })
  
   const fetchProducts = async(params) => { 
     const response = await apiGetProducts({...params, limit : process.env.REACT_APP_LIMIT})
@@ -38,11 +44,14 @@ const ManageProducts = () => {
   useEffect(() => { 
       const searchParams = Object.fromEntries([...params])
       fetchProducts(searchParams)
-   },[params, queryDebounce])
+   },[params, update])
   return (
-    <div className='w-full px-4 flex flex-col gap-4 relative'>
+    <div className='w-full  flex flex-col gap-4 relative'>
+      {editProduct && <div className='absolute inset-0 bg-gray-100 min-h-screen z-10'>
+        <UpdateProduct editProduct={editProduct} render={render} />
+      </div>}
       <div className='h-[69px] w-full'></div>
-      <div className='p-4 border-b w-full bg-gray-100 flex justify-between items-center fixed top-0'>
+      <div className='p-4  border-b w-full bg-gray-100 flex justify-between items-center fixed top-0'>
         <h1 className='text-3xl font-bold tracking-tight '>Manage products</h1>
       </div>
       <div className='flex w-full justify-end items-center px-4'>
@@ -70,6 +79,7 @@ const ManageProducts = () => {
                   <th className='text-center py-2'>Color</th>
                   <th className='text-center py-2'>Ratings</th>
                   <th className='text-center py-2'>UpdateAt</th>
+                  <th className='text-center py-2'>Actions</th>
                 </tr>
             </thead>
             <tbody>
@@ -88,6 +98,10 @@ const ManageProducts = () => {
                     <td className='text-center py-2'>{el.color}</td>
                     <td className='text-center py-2'>{el.totalRating}</td>
                     <td className='text-center py-2'>{moment(el.createdAt).format('DD/MM/YYYY')}</td>
+                    <td className='text-center py-2'>
+                        <span onClick={() => setEditProduct(el)} className='text-blue-500 hover:underline cursor-pointer px-1'>Edit</span>
+                        <span className='text-blue-500 hover:underline cursor-pointer px-1'>Remove</span>
+                    </td>
                 </tr>
               ))}
             </tbody>
