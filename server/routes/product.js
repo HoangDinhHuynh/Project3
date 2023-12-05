@@ -14,6 +14,10 @@ router.put('/ratings',[verifyAccessToken],ctrls.ratings)
 
 
 router.put('/uploadimages/:pid',[verifyAccessToken,isAdmin],uploader.array('images',10),ctrls.uploadImagesProduct)
+router.put('/updateproduct/varriant/:pid',[verifyAccessToken,isAdmin],uploader.fields([
+    {name : 'images' , maxCount:10},
+    {name : 'thumb' , maxCount : 1}
+]),ctrls.addVarriant)
 router.put('/updateproduct/:pid',[verifyAccessToken,isAdmin],uploader.fields([
     {name : 'images' , maxCount:10},
     {name : 'thumb' , maxCount : 1}

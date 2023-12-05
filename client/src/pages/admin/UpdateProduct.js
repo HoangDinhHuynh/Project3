@@ -8,6 +8,7 @@ import { apiUpdateProduct } from 'apis/product'
 import { showModal } from 'store/app/appSlice'
 
 const UpdateProduct = ({editProduct, render, setEditProduct}) => {
+  
     const {register, handleSubmit, formState:{errors}, reset, watch} = useForm()
     const {categories} = useSelector(state => state.app)
     const dispatch = useDispatch()
@@ -69,10 +70,10 @@ const UpdateProduct = ({editProduct, render, setEditProduct}) => {
         if(invalids === 0) {
           if(data.category) data.category = categories?.find(el => el.tiltle === data.category)?.tiltle
           const finalPayload = {...data, ...payload,}
-          finalPayload.thumb = data?.thumb?.length === 0 ? preview.thumb : data.thumb [0]
+          finalPayload.thumb = data?.thumb?.length === 0 ? preview?.thumb : data?.thumb[0]
           const formData = new FormData()
           for (let i of Object.entries (finalPayload)) formData.append(i[0], i[1])
-          finalPayload.images = data.images?.length === 0 ? preview.images : data.images
+          finalPayload.images = data.images?.length === 0 ? preview?.images : data?.images
           for (let image of finalPayload.images) formData.append('images', image)
           dispatch(showModal({isShowModal : true , modalChildren : <Loading />}))
           const respone = await apiUpdateProduct(formData, editProduct._id)
@@ -82,7 +83,6 @@ const UpdateProduct = ({editProduct, render, setEditProduct}) => {
             render()
             setEditProduct(null)
           }else toast.error(respone.mes)
-    
         }
       }
 

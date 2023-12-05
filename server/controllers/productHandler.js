@@ -2,6 +2,7 @@ const { response, query } = require('express')
 const Product = require('../models/product')
 const asyncHanlder = require('express-async-handler')
 const slugify = require('slugify')
+const makeSKU = require('uniqid')
 
 
 // HÀM TẠO SẢN PHẨM 
@@ -120,7 +121,7 @@ const updateProduct = asyncHanlder(async(req,res)=>{
     const updatedProduct = await Product.findByIdAndUpdate(pid,req.body,{new:true})
     return res.status(200).json({
         success : updatedProduct ? true : false,
-        mes : updatedProduct ? 'Updated' : 'Cannot update products'
+        mes : updatedProduct ?  updatedProduct : 'Cannot update products'
     })
 
 })
@@ -186,6 +187,19 @@ const uploadImagesProduct = asyncHanlder(async(req,res)=>{
     })
 })
 
+// HÀM THÊM BIẾN THỂ
+const addVarriant = asyncHanlder(async(req,res)=>{
+    const{pid} = req.params
+    const {tiltle, price, color} = req.body
+    const thumb = req?.files?.thumb[0]?.path
+    const images = req.files?.images?.map(el => el.path)
+    if (!(tiltle && price && color)) throw new Error('Missing inputs')
+    const respone = await Product.findByIdAndUpdate(pid,{$push:{varriants: { color, price, tiltle, thumb, images, sku: makeSKU().toUpperCase()}}},{new:true})
+    return res.status(200).json({
+        status :  respone ? true : false, 
+        respone : respone ? respone : 'Cannot upload Images product'
+    })
+})
 
 
 
@@ -196,5 +210,6 @@ module.exports = {
     updateProduct,
     deleteProcduct,
     ratings,
-    uploadImagesProduct
+    uploadImagesProduct,
+    addVarriant
 }

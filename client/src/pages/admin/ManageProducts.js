@@ -1,5 +1,5 @@
 import React, { useEffect, useState,  useCallback  } from 'react'
-import { InputForm,Pagination } from 'component'
+import { CustomizeVarriants, InputForm,Pagination } from 'component'
 import { useForm } from 'react-hook-form'
 import { apiGetProducts, apiDeleteProduct } from 'apis/product'
 import { useSearchParams, createSearchParams, useNavigate, useLocation } from 'react-router-dom'
@@ -8,9 +8,11 @@ import moment from 'moment'
 import useDebounce from 'hooks/useDebounce'
 import UpdateProduct from './UpdateProduct'
 import Swal from 'sweetalert2'
+import icons from 'ultils/icon'
 
 const ManageProducts = () => {
 
+  const {FaRegEdit, RiDeleteBin6Line, MdOutlineDashboardCustomize} = icons 
   const location = useLocation()
   const navigate = useNavigate() 
   const [params] = useSearchParams()
@@ -19,6 +21,7 @@ const ManageProducts = () => {
   const [counts, setCounts] = useState(0)
   const [editProduct, setEditProduct] = useState(null)
   const [update, setUpdate] = useState(false)
+  const [customizeVarriant, setCustomizeVarriant] = useState(null)
 
   const render = useCallback(() => { 
       setUpdate(!update)
@@ -71,6 +74,13 @@ const ManageProducts = () => {
           setEditProduct={setEditProduct}
         />
       </div>}
+      {customizeVarriant && <div className='absolute inset-0 bg-gray-100 min-h-screen z-10'>
+        <CustomizeVarriants 
+          customizeVarriant={customizeVarriant} 
+          render={render} 
+          setCustomizeVarriant={setCustomizeVarriant}
+        />
+      </div>}
       <div className='h-[69px] w-full'></div>
       <div className='p-4  border-b w-full bg-gray-100 flex justify-between items-center fixed top-0'>
         <h1 className='text-3xl font-bold tracking-tight '>Manage products</h1>
@@ -120,8 +130,9 @@ const ManageProducts = () => {
                     <td className='text-center py-2'>{el.totalRating}</td>
                     <td className='text-center py-2'>{moment(el.createdAt).format('DD/MM/YYYY')}</td>
                     <td className='text-center py-2'>
-                        <span onClick={() => setEditProduct(el)} className='text-blue-500 hover:underline cursor-pointer px-1'>Edit</span>
-                        <span onClick={() => hanldeDeleteProduct(el._id)} className='text-blue-500 hover:underline cursor-pointer px-1'>Remove</span>
+                        <span onClick={() => setEditProduct(el)} className='text-blue-500 hover:underline cursor-pointer px-1 inline-block hover:text-orange-500'><FaRegEdit size={20} /></span>
+                        <span onClick={() => hanldeDeleteProduct(el._id)} className='text-blue-500 hover:underline cursor-pointer px-1 inline-block hover:text-orange-500'><RiDeleteBin6Line size={20} /></span>
+                        <span onClick={() => setCustomizeVarriant(el)} className='text-blue-500 hover:underline cursor-pointer px-1 inline-block hover:text-orange-500'><MdOutlineDashboardCustomize size={20}/></span>
                     </td>
                 </tr>
               ))}
