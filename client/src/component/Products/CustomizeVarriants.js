@@ -37,6 +37,14 @@ const CustomizeVarriants = ({ customizeVarriant, setCustomizeVarriant, render })
       dispatch(showModal({ isShowModal: true, modalChildren: <Loading /> }))
       const respone = await apiAddVarriant(formData, customizeVarriant._id)
       dispatch(showModal({ isShowModal: false, modalChildren: null }))
+      if(respone.success) {
+        toast.success(respone.mes)
+        reset()
+        setPreview({
+          thumb : '',
+          images : []
+        })
+      }else toast.error(respone.mes)
     }
   }
   const hanldePreviewThumb = async (file) => {
@@ -69,7 +77,7 @@ const CustomizeVarriants = ({ customizeVarriant, setCustomizeVarriant, render })
       <div className='h-[69px] w-full'></div>
       <div className='p-4  border-b bg-gray-100 flex justify-between items-center fixed top-0 right-0 left-[327px]'>
         <h1 className='text-3xl font-bold tracking-tight '>Customize varriants of products</h1>
-        <span className='text-main hover:underline cursor-pointer' onClick={() => setCustomizeVarriant(null)}>Cancel</span>
+        <span className='text-main hover:underline cursor-pointer' onClick={() => setCustomizeVarriant(null)}>Back</span>
       </div>
       <form onSubmit={handleSubmit(handleAddVarriant)} className='p-4 w-full flex flex-col gap-4'>
         <div className='flex gap-4 items-center w-full'>

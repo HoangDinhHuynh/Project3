@@ -121,7 +121,7 @@ const updateProduct = asyncHanlder(async(req,res)=>{
     const updatedProduct = await Product.findByIdAndUpdate(pid,req.body,{new:true})
     return res.status(200).json({
         success : updatedProduct ? true : false,
-        mes : updatedProduct ?  updatedProduct : 'Cannot update products'
+        mes : updatedProduct ?  'Updated Product' : 'Cannot update products'
     })
 
 })
@@ -171,7 +171,7 @@ const ratings = asyncHanlder(async(req,res)=>{
 
 
     return res.status(200).json({
-        status : true , 
+        success : true , 
         updatedProduct
     })
 })
@@ -182,7 +182,7 @@ const uploadImagesProduct = asyncHanlder(async(req,res)=>{
     if (!req.files) throw new Error('Missing Inpus')
     const respone = await Product.findByIdAndUpdate(pid,{$push:{images: {$each: req.files.map(el => el.path)}}},{new:true})
     return res.status(200).json({
-        status :  respone ? true : false, 
+        success :  respone ? true : false, 
         updatedProduct : respone ? respone : 'Cannot upload Images product'
     })
 })
@@ -196,8 +196,8 @@ const addVarriant = asyncHanlder(async(req,res)=>{
     if (!(tiltle && price && color)) throw new Error('Missing inputs')
     const respone = await Product.findByIdAndUpdate(pid,{$push:{varriants: { color, price, tiltle, thumb, images, sku: makeSKU().toUpperCase()}}},{new:true})
     return res.status(200).json({
-        status :  respone ? true : false, 
-        respone : respone ? respone : 'Cannot upload Images product'
+        success :  respone ? true : false, 
+        mes : respone ? 'Added varriant.' : 'Cannot upload Images product'
     })
 })
 

@@ -7,6 +7,7 @@ import ReactImageMagnify from 'react-image-magnify';
 import {formatPrice,formatMoney,renderStarFromNumber} from '../../ultils/helpers'
 import { productExtraInfomation} from '../../ultils/contants'
 import  DOMPurify from 'dompurify';
+import clsx from 'clsx'
 
 
 
@@ -29,6 +30,14 @@ const DetailProduct = () => {
   const [quantity, setQuantity] = useState(1)
   const [relatedProducts, setRelatedProducts] = useState(null)
   const [update, setUpdate] = useState(false)
+  const [varriant, setVarriant] = useState(null)
+  const [currentProduct, setCurrentProduct] = useState({
+    tiltle : '',
+    thumb : '',
+    images : '',
+    price : '',
+    color : ''
+  })
   // console.log(pid , tiltle) 
   const fetchProductData = async () => {  
     const response = await apiGetProduct(pid)
@@ -37,6 +46,17 @@ const DetailProduct = () => {
       setCurrentImage(response.productData?.thumb)
     }
    }
+  useEffect(() => { 
+      if(varriant){
+        setCurrentProduct({
+          tiltle : product?.varriants?.find(el => el.sku === varriant)?.tiltle,
+          color : product?.varriants?.find(el => el.sku === varriant)?.color,
+          images : product?.varriants?.find(el => el.sku === varriant)?.images,
+          price : product?.varriants?.find(el => el.sku === varriant)?.price,
+          thumb : product?.varriants?.find(el => el.sku === varriant)?.thumb,
+        })
+      }
+  },[varriant])
   const fetchProducts = async() => { 
     const response = await apiGetProducts({category})
     if (response.success) setRelatedProducts(response.products)
@@ -76,8 +96,8 @@ const DetailProduct = () => {
     <div className='w-full'>
       <div className='h-[81px] flex justify-center items-center bg-gray-100 '>
           <div className='w-main'>
-            <h3 className='font-semibold'>{tiltle}</h3>
-            <Breadcrumb tiltle={tiltle} category={category} />
+            <h3 className='font-semibold'>{currentProduct.tiltle || product?.tiltle}</h3>
+            <Breadcrumb tiltle={currentProduct.tiltle || product?.tiltle} category={category} />
           </div>
       </div>
       <div className='w-main m-auto mt-4 flex'>
@@ -87,10 +107,10 @@ const DetailProduct = () => {
               smallImage: {
                 alt: 'Wristwatch by Ted Baker London',
                 isFluidWidth: true,
-                src: currentImage
+                src: currentProduct.thumb || currentImage
               },
               largeImage: {
-                src: currentImage,
+                src: currentProduct.thumb || currentImage,
                 width: 1200,
                 height: 1200
               },
@@ -98,7 +118,12 @@ const DetailProduct = () => {
           </div>
               <div className='w-[458px]'>
                 <Slider className='images-slider flex gap-2'{...settings}>
-                  {product?.images?.map(el => (
+                  {currentProduct.images.length === 0 && product?.images?.map(el => (
+                    <div key={el} className=''>
+                      <img onClick={e => handleClickImage(e,el)} src={el} alt='sub-product' className='cursor-pointer h-[135px] w-[135px] border object-contain' />
+                    </div>
+                  ))}
+                  {currentProduct.images.length > 0 && currentProduct.images?.map(el => (
                     <div key={el} className=''>
                       <img onClick={e => handleClickImage(e,el)} src={el} alt='sub-product' className='cursor-pointer h-[135px] w-[135px] border object-contain' />
                     </div>
@@ -108,7 +133,7 @@ const DetailProduct = () => {
             </div>
             <div className='w-2/5 pr-[24px] flex flex-col gap-4'>
               <div className='flex items-center justify-between'>
-                <h2 className='text-[30px] font-semibold'>{`${formatMoney(formatPrice(product?.price))} VNĐ`}</h2>
+                <h2 className='text-[30px] font-semibold'>{`${formatMoney(formatPrice(currentProduct.price || product?.price))} VNĐ`}</h2>
                 <span className='text-sm text-main'>{`Storage : ${product?.quantity}`}</span>
               </div>
               <div className='flex items-center gap-1'>
@@ -119,6 +144,31 @@ const DetailProduct = () => {
                 {product?.description?.length > 1 && product?.description?.map(el => (<li className='leading-6' key={el}>{el}</li>))}
                 {product?.description?.length === 1 && <div className='text-sm line-clamp-[10] mb-8' dangerouslySetInnerHTML={{ __html : DOMPurify.sanitize(product?.description[0])}}></div>}
               </ul>
+              <div className='my-4 flex gap-4'>
+                <span className='font-bold'>Color:</span>
+                <div className='flex flex-wrap gap-4 items-center w-full'>
+                  <div  
+                    onClick={() => setVarriant(null)} 
+                    className={clsx('flex items-center gap-2 p-2 border cursor-pointer', !varriant  && 'border-red-500')}>
+                    <img src={product?.thumb} alt='thumb' className='w-8 h-8 rounded-md object-cover'/>
+                    <span className='flex flex-col'>
+                      <span>{product?.color}</span>
+                      <span className='text-sm'>{product?.price}</span>
+                    </span>
+                  </div>
+                  {product?.varriants?.map(el => (
+                    <div 
+                      onClick={() => setVarriant(el.sku)} 
+                      className={clsx('flex items-center gap-2 p-2 border cursor-pointer', varriant === el.sku && 'border-red-500')}>
+                    <img src={el?.thumb} alt='thumb' className='w-8 h-8 rounded-md object-cover'/>
+                    <span className='flex flex-col'>
+                      <span>{el?.color}</span>
+                      <span className='text-sm'>{el?.price}</span>
+                    </span>
+                  </div>
+                  ))}
+                </div>
+              </div>
               <div className='flex flex-col gap-8'>
                 <div className='flex items-center gap-4'>
                 <span className='font-semibold'>Quantity</span>

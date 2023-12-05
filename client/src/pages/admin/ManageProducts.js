@@ -109,6 +109,7 @@ const ManageProducts = () => {
                   <th className='text-center py-2'>Sold</th>
                   <th className='text-center py-2'>Color</th>
                   <th className='text-center py-2'>Ratings</th>
+                  <th className='text-center py-2'>Varriant</th>
                   <th className='text-center py-2'>UpdateAt</th>
                   <th className='text-center py-2'>Actions</th>
                 </tr>
@@ -128,6 +129,7 @@ const ManageProducts = () => {
                     <td className='text-center py-2'>{el.sold}</td>
                     <td className='text-center py-2'>{el.color}</td>
                     <td className='text-center py-2'>{el.totalRating}</td>
+                    <td className='text-center py-2'>{el.varriants?.length || 0}</td>
                     <td className='text-center py-2'>{moment(el.createdAt).format('DD/MM/YYYY')}</td>
                     <td className='text-center py-2'>
                         <span onClick={() => setEditProduct(el)} className='text-blue-500 hover:underline cursor-pointer px-1 inline-block hover:text-orange-500'><FaRegEdit size={20} /></span>
