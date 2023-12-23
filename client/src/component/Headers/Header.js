@@ -1,15 +1,16 @@
-import React ,{Fragment,memo} from "react";
+import React ,{Fragment,memo, useState} from "react";
 import logo from 'assets/logo.png'
 import icons from 'ultils/icon'
 import {Link} from 'react-router-dom'
 import path from 'ultils/path'
-import { useSelector } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 
 const {RiPhoneFill, MdEmail ,BsFillHandbagFill,FaUserCircle} = icons
 const Header = () => {
 
     const { current } = useSelector(state => state.user)
-
+    const [isShowOption, setIsShowOption] = useState(false)
+    const dispatch = useDispatch()
     return (
         <div className="w-main flex justify-between h-[110px] py-[35px]">
             <Link to={`/${path.HOME}`}>
@@ -35,13 +36,31 @@ const Header = () => {
                     <BsFillHandbagFill color="red"/>
                     <span>0 item(s)</span>
                 </div>
-                <Link 
-                className="cursor-pointer flex items-center px-6  justify-center gap-2"
-                to={+current?.role  === 2000 ?  `/${path.ADMIN}/${path.DASHBOARD}`: `/${path.MEMBER}/${path.PERSONAL}`}
+                <div 
+                    className="cursor-pointer flex items-center px-6  justify-center gap-2 relative"
+                    onClick={()=> setIsShowOption(prev => !prev)}
                 >
                     <FaUserCircle color="red"/>
                     <span>Profile</span>
-                </Link>
+                    {isShowOption && <div className="flex flex-col absolute top-full left-[16px] bg-gray-100 border min-w-[150px] py-2">
+                        <Link 
+                            className="p-2 w-full hover:bg-sky-100" 
+                            to={`/${path.MEMBER}/${path.PERSONAL}`}>
+                                Personal
+                        </Link>
+                        {+current?.role == 2000 && <Link 
+                            className="p-2 w-full hover:bg-sky-100" 
+                            to={`/${path.ADMIN}/${path.DASHBOARD}`}>
+                                Admin workspace
+                        </Link>}
+                        {/* <span 
+                            onClick={() => dispatch(logout())}
+                            className="p-2 w-full hover:bg-sky-100">
+                                Logout
+                        </span> */}
+                    </div>}
+                </div>
+                
                 
                 </Fragment>}
             </div>

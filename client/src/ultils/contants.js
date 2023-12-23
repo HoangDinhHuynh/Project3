@@ -237,6 +237,36 @@ const {RiTruckFill,FaShieldAlt,BsReplyFill,FaTty,AiFillGift} = icons
         icon : <RiBillLine size={20}/>
     },
  ]
+ export const memberSidebar = [
+    {
+        id:1,
+        type:'SINGLE',
+        text: 'Personal',
+        path : `/${path.MEMBER}/${path.PERSONAL}`,
+        icon : <AiOutlineDashboard size={20}/>
+    },
+    {
+        id:2,
+        type:'SINGLE',
+        text: 'My cart',
+        path : `/${path.MEMBER}/${path.MY_CART}`,
+        icon : <MdGroups2 size={20}/>
+    },
+    {
+        id:3,
+        type:'SINGLE',
+        text: 'Buy Histories',
+        path : `/${path.MEMBER}/${path.HISTORY}`,
+        icon : <RiBillLine size={20}/>
+    },
+    {
+        id:4,
+        type:'SINGLE',
+        text: 'Wish List',
+        path : `/${path.MEMBER}/${path.WISHLIST}`,
+        icon : <RiBillLine size={20}/>
+    },
+ ]
 
  export const roles = [
     {

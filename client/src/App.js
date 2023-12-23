@@ -20,7 +20,7 @@ import {
   Dashboard,
   CreateProducts,
 } from 'pages/admin'
-import { MemberLayout,Personal } from 'pages/member'
+import { MemberLayout,Personal,History,MyCart,WishList } from 'pages/member'
 import path from 'ultils/path'
 import {getCategories} from 'store/app/asyncAction'
 import {useDispatch,useSelector} from 'react-redux'
@@ -60,6 +60,9 @@ function App() {
         </Route>
         <Route path={path.MEMBER} element={<MemberLayout />}>
             <Route path={path.PERSONAL} element={<Personal />}/>
+            <Route path={path.MY_CART} element={<MyCart />}/>
+            <Route path={path.WISHLIST} element={<WishList />}/>
+            <Route path={path.HISTORY} element={<History />}/>
         </Route>
         <Route path={path.FINAL_REGISTER} element={<FinalRegister/>}/>
         <Route path={path.LOGIN} element={<Login/>}/>

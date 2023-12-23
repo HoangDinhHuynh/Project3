@@ -70,8 +70,8 @@ const UpdateProduct = ({editProduct, render, setEditProduct}) => {
         if(invalids === 0) {
           if(data.category) data.category = categories?.find(el => el.tiltle === data.category)?.tiltle
           const finalPayload = {...data, ...payload,}
-          finalPayload.thumb = data?.thumb?.length === 0 ? preview?.thumb : data?.thumb[0]
           const formData = new FormData()
+          finalPayload.thumb = data?.thumb?.length === 0 ? preview?.thumb : data?.thumb[0]
           for (let i of Object.entries (finalPayload)) formData.append(i[0], i[1])
           finalPayload.images = data.images?.length === 0 ? preview?.images : data?.images
           for (let image of finalPayload.images) formData.append('images', image)
