@@ -34,7 +34,7 @@ const Header = () => {
                 {current && <Fragment>
                     <div className="cursor-pointer flex items-center px-6 border-r justify-center gap-2">
                     <BsFillHandbagFill color="red"/>
-                    <span>0 item(s)</span>
+                    <span>{`${current?.cart?.length || 0} item(s)`}</span>
                 </div>
                 <div 
                     className="cursor-pointer flex items-center px-6  justify-center gap-2 relative"
