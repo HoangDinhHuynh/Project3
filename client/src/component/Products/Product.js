@@ -5,17 +5,28 @@ import labelTrend from 'assets/label-trend.png'
 import {SelectOption} from '..'
 import icons from 'ultils/icon'
 import { Link } from "react-router-dom";
+import withBase from "hocs/withBase";
+import { showModal } from "store/app/appSlice";
+import { DetailProduct } from "pages/publics";
 
 const {AiFillEye,BiMenu, BsFillSuitHeartFill}  = icons
 
 
-const Product = ({productData, isNew , normal}) =>{
+const Product = ({productData, isNew , normal, navigate, dispatch}) =>{
     const [isShowOption, setIsShowOption] = useState(false)
+    const handleClickOptions = (e,flag) => { 
+        e.stopPropagation()
+        if(flag === 'MENU') navigate(`${productData?.category?.toLowerCase()}/${productData?._id}/${productData?.tiltle}`)
+        if(flag === 'WISHLIST') console.log("Wishlist")
+        if(flag === 'QUICK_VIEW') {
+            dispatch(showModal({isShowModal: true, modalChildren: <DetailProduct data={{pid: productData?._id, category: productData?.category}} isQuickView/>}))
+        }
+     }
     return(
         <div className="w-full text-base px-[10px]">
-            <Link 
+            <div 
             className="w-full border rounded p-[15px] flex flex-col items-center"
-            to={`${productData?.category?.toLowerCase()}/${productData?._id}/${productData?.tiltle}`}
+            onClick={e => navigate(`${productData?.category?.toLowerCase()}/${productData?._id}/${productData?.tiltle}`)}
             onMouseEnter={e => {
                 e.stopPropagation()
                 setIsShowOption(true)
@@ -27,9 +38,9 @@ const Product = ({productData, isNew , normal}) =>{
             >
                 <div className="w-full relative">
                     {isShowOption && <div className='absolute bottom-0 left-0 right-0 flex justify-center gap-2 animate-slide-top'>
-                        <SelectOption icon={<AiFillEye />}/>
-                        <SelectOption icon={<BiMenu />}/>
-                        <SelectOption icon={<BsFillSuitHeartFill />}/>
+                        <span onClick={(e) => handleClickOptions(e,'QUICK_VIEW')}><SelectOption icon={<AiFillEye />}/></span>
+                        <span onClick={(e) => handleClickOptions(e,'MENU')}><SelectOption icon={<BiMenu />}/></span>
+                        <span onClick={(e) => handleClickOptions(e,'WISHLIST')}><SelectOption icon={<BsFillSuitHeartFill />}/></span>
                     </div>}
                     <img src={productData?.thumb || 'https://nayemdevs.com/wp-content/uploads/2020/03/default-product-image.png'}
                         alt=""
@@ -46,9 +57,9 @@ const Product = ({productData, isNew , normal}) =>{
                     : 'chưa có đánh giá'}</span>
                     <span>{`${formatMoney(productData?.price)} VNĐ`}</span>
                 </div>
-            </Link>
+            </div>
         </div>
     )
 }
 
-export default memo(Product)
+export default withBase(Product)

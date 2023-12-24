@@ -22,15 +22,17 @@ const settings = {
   // pauseOnHover: false
 };
 
-const DetailProduct = () => {
+const DetailProduct = ({isQuickView, data}) => {
 
-  const {pid ,tiltle ,category} = useParams()
+  const params = useParams()
   const [product, setProduct] = useState(null)
   const [currentImage, setCurrentImage] = useState(null)
   const [quantity, setQuantity] = useState(1)
   const [relatedProducts, setRelatedProducts] = useState(null)
   const [update, setUpdate] = useState(false)
   const [varriant, setVarriant] = useState(null)
+  const [pid, setPid] = useState(null)
+  const [category, setCategory] = useState(null)
   const [currentProduct, setCurrentProduct] = useState({
     tiltle : '',
     thumb : '',
@@ -38,6 +40,16 @@ const DetailProduct = () => {
     price : '',
     color : ''
   })
+  useEffect(() => { 
+      if(data) {
+        setPid(data.pid)
+        setCategory(data.category)
+      }
+      else if(params && params.pid) {
+        setPid(params.pid)
+        setCategory(params.category)
+      }
+   },[data, params])
   // console.log(pid , tiltle) 
   const fetchProductData = async () => {  
     const response = await apiGetProduct(pid)
@@ -93,14 +105,15 @@ const DetailProduct = () => {
       setCurrentImage(el)
      }
   return (
-    <div className='w-full'>
+    <div className='w-full '>
+      {!isQuickView && 
       <div className='h-[81px] flex justify-center items-center bg-gray-100 '>
           <div className='w-main'>
             <h3 className='font-semibold'>{currentProduct.tiltle || product?.tiltle}</h3>
             <Breadcrumb tiltle={currentProduct.tiltle || product?.tiltle} category={category} />
           </div>
-      </div>
-      <div className='w-main m-auto mt-4 flex'>
+      </div>}
+      <div onClick={e => e.stopPropagation()} className='w-main m-auto mt-4 flex bg-white'>
         <div className='flex flex-col gap-4 w-2/5'>
           <div className='h-[458px] w-[458px] border flex items-center overflow-hidden'>
             <ReactImageMagnify {...{
@@ -183,7 +196,7 @@ const DetailProduct = () => {
                 </Button>
               </div>
             </div>
-            <div className='w-1/5'>
+            {!isQuickView && <div className='w-1/5'>
               {productExtraInfomation.map(el=>(
                 <ProductExtrainfoitem 
                 key={el.id}
@@ -192,9 +205,9 @@ const DetailProduct = () => {
                 sub={el.sub}
                 />
               ))}
-            </div>
+            </div>}
       </div>
-      <div className='w-main m-auto mt-8'>
+      {!isQuickView && <div className='w-main m-auto mt-8'>
         <ProductInfomation
         pid={product?._id} 
         totalRating={product?.totalRating} 
@@ -202,14 +215,16 @@ const DetailProduct = () => {
         nameProduct={product?.tiltle}
         reRender={reRender}
         />
-      </div>
-        <div className='w-main m-auto mt-8'>
+      </div>}
+       {!isQuickView && <>
+       <div className='w-main m-auto mt-8'>
             <h3 className="text-[20px] font-semibold py-[15px] border-b-2 border-main">OTHER CUSTOMERS ALSO LIKED :</h3>
             <div className='pt-10'>
               <CustomSlider  normal={true} products={relatedProducts}/> 
             </div>
         </div>
       <div className='h-[100px] w-full'></div>
+      </>}
     </div>
   )
 }
