@@ -261,7 +261,13 @@ const getAllUsers = asyncHanlder(async(req,res)=>{
 // HÀM LẤY RA THÔNG TIN CỦA 1 NGƯỜI DÙNG
 const getCurrent = asyncHanlder(async(req,res)=>{
     const {_id} = req.user
-    const user = await User.findById(_id).select('-refreshToken -password')
+    const user = await User.findById(_id).select('-refreshToken -password').populate({
+        path: 'cart',
+        populate : {
+            path: 'product',
+            select : 'tiltle thumb price'
+        }
+    })
     return res.status(200).json({
         success: user ? true : false,
         rs : user ? user : 'User not found'

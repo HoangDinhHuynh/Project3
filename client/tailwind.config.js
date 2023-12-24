@@ -19,6 +19,12 @@ module.exports = {
       width:{
         main : '1220px'
       },
+      gridTemplateRows: {
+        // Simple 8 row grid
+        '10': 'repeat(10, minmax(0, 1fr))',
+        // Complex site-specific row configuration
+        'layout': '200px minmax(900px, 1fr) 100px',
+      },
       backgroundColor:{
         main : '#ee3131',
         overlay : 'rgba(0,0,0,0.7)'

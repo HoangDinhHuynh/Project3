@@ -4,13 +4,14 @@ import icons from 'ultils/icon'
 import {Link} from 'react-router-dom'
 import path from 'ultils/path'
 import { useDispatch, useSelector } from 'react-redux'
+import withBase from "hocs/withBase";
+import { showCart } from "store/app/appSlice";
 
 const {RiPhoneFill, MdEmail ,BsFillHandbagFill,FaUserCircle} = icons
-const Header = () => {
+const Header = ({dispatch}) => {
 
     const { current } = useSelector(state => state.user)
     const [isShowOption, setIsShowOption] = useState(false)
-    const dispatch = useDispatch()
     return (
         <div className="w-main flex justify-between h-[110px] py-[35px]">
             <Link to={`/${path.HOME}`}>
@@ -32,7 +33,7 @@ const Header = () => {
                     <span>Online Support 24/7</span>
                 </div>
                 {current && <Fragment>
-                    <div className="cursor-pointer flex items-center px-6 border-r justify-center gap-2">
+                    <div onClick={()=>dispatch(showCart())} className="cursor-pointer flex items-center px-6 border-r justify-center gap-2">
                     <BsFillHandbagFill color="red"/>
                     <span>{`${current?.cart?.length || 0} item(s)`}</span>
                 </div>
@@ -68,4 +69,4 @@ const Header = () => {
     )
 }
 
-export default memo(Header)
+export default withBase(memo(Header))
