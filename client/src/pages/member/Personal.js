@@ -32,7 +32,7 @@ const Personal = () => {
 
     const response = await apiUpdateCurrent(formData)
     if(response.success) {
-        // dispatch(getCurrent()),
+        dispatch(getCurrent())
         toast.success(response.mes)
     }else toast.error(response.mes)
 }
