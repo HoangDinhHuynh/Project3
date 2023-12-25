@@ -1,13 +1,26 @@
+import Button from 'component/Buttons/Button';
 import withBase from 'hocs/withBase';
 import React, { memo } from 'react'
 import { IoIosCloseCircle } from "react-icons/io";
 import { useSelector } from 'react-redux';
-import { showCart } from 'store/app/appSlice';
+import { showCart} from 'store/app/appSlice';
+import { formatMoney } from 'ultils/helpers';
+import { ImBin } from "react-icons/im";
+import { getCurrent } from 'store/user/asyncAction';
+import { apiRemoveCart } from 'apis';
+import { toast } from 'react-toastify';
+import path from 'ultils/path';
 
-const Cart = ({dispatch}) => {
+const Cart = ({dispatch, navigate}) => {
 
     const {current} = useSelector(state => state.user)
-    console.log(current)
+    const removeCart = async(pid) => { 
+        const response = await apiRemoveCart(pid)
+            if(response.success) {
+                dispatch(getCurrent()) 
+            }
+            else toast.error(response.mes)
+     }
 
   return (
     <div onClick={e => e.stopPropagation()} className='w-[400px] h-screen  bg-black grid grid-rows-10 text-white p-6'>
@@ -15,21 +28,32 @@ const Cart = ({dispatch}) => {
             <span>Your Cart</span>
             <span onClick={()=> dispatch(showCart())} className='cursor-pointer p-2'><IoIosCloseCircle size={24} /></span>
         </header>
-        <section className='row-span-6 gap-3 flex flex-col h-full  max-h-full overflow-y-auto py-3'>
+        <section className='row-span-7 gap-3 flex flex-col h-full  max-h-full overflow-y-auto py-3'>
             {!current?.cart && <span className='text-xs italic'>Your cart is empty.</span>}
             {current?.cart && current?.cart?.map(el => (
-                <div key={el._id} className='flex gap-2'>
-                    <img src={el.product?.thumb} alt='thumb' className='w-16 h-16 object-cover rounded-md'/>
-                    <div className='flex flex-col gap-1'>
-                        <span className='font-bold text-main'>{el.product?.tiltle}</span>
-                        <span className='text-xs'>{el.color}</span>
-                        <span className='text-base'>{el.product?.price}</span>
+                <div key={el._id} className='flex justify-between items-center'>
+                    <div className='flex gap-2'>
+                        <img src={el.product?.thumb} alt='thumb' className='w-16 h-16 object-cover rounded-md'/>
+                        <div className='flex flex-col gap-1'>
+                            <span className='text-sm text-main'>{el.product?.tiltle}</span>
+                            <span className='text-[12px]'>{el.color}</span>
+                            <span className='text-sm'>{formatMoney(el.product?.price)+ ' VNĐ'}</span>
+                        </div>
                     </div>
+                    <span onClick={()=>removeCart(el.product?._id)} className='h-8 w-8 rounded-full hover:bg-gray-700 flex cursor-pointer items-center justify-center'><ImBin size={16} /></span>
                 </div>
             ))}
         </section>
-        <div className='row-span-3 h-full'>
-            checkout
+        <div className='row-span-2 flex flex-col justify-between h-full'>
+            <div className='flex items-center justify-between pt-4 border-t'>
+                <span>Subtotal :</span>
+                <span>{formatMoney(current?.cart?.reduce((sum, el) => sum + Number(el.product?.price), 0))+ ' VNĐ'}</span>
+            </div>
+            <span className='text-center text-gray-700 italic text-xs'>Shipping, taxes, and discounts calculated at checkout.</span>
+            <Button handleOnClick={() => {
+                dispatch(showCart())
+                navigate(`${path.DETAIL_CART}`)
+            }} style='rounded-none w-full bg-main py-3'>Shopping Cart</Button>
         </div>
     </div>
   )
