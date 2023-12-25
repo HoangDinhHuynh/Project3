@@ -75,6 +75,14 @@ const DetailProduct = ({isQuickView, data, location, navigate, dispatch}) => {
           price : product?.varriants?.find(el => el.sku === varriant)?.price,
           thumb : product?.varriants?.find(el => el.sku === varriant)?.thumb,
         })
+      }else {
+        setCurrentProduct ({
+            title: product?.title,
+            color: product?.color,
+            images: product?.images || [],
+            price: product?.price,
+            thumb: product?.thumb,
+        })
       }
   },[varriant])
   const fetchProducts = async() => { 
@@ -127,7 +135,15 @@ const DetailProduct = ({isQuickView, data, location, navigate, dispatch}) => {
               search : createSearchParams({redirect: location.pathname}).toString()
             })
         })
-        const response = await apiUpdateCart({pid, color: currentProduct.color, quantity})
+        const response = await apiUpdateCart({
+          pid, 
+          color: currentProduct.color || product?.color, 
+          quantity,
+          price: currentProduct.price || product.price,
+          thumbnail: currentProduct.thumb || product.thumb,
+          tiltle: currentProduct.tiltle || product.tiltle,
+
+        })
         if(response.success) {
             toast.success(response.mes)
             dispatch(getCurrent()) 
@@ -201,6 +217,7 @@ const DetailProduct = ({isQuickView, data, location, navigate, dispatch}) => {
                   </div>
                   {product?.varriants?.map(el => (
                     <div 
+                      key={el.sku}
                       onClick={() => setVarriant(el.sku)} 
                       className={clsx('flex items-center gap-2 p-2 border cursor-pointer', varriant === el.sku && 'border-red-500')}>
                     <img src={el?.thumb} alt='thumb' className='w-8 h-8 rounded-md object-cover'/>

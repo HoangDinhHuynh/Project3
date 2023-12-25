@@ -14,8 +14,8 @@ import path from 'ultils/path';
 const Cart = ({dispatch, navigate}) => {
 
     const {current} = useSelector(state => state.user)
-    const removeCart = async(pid) => { 
-        const response = await apiRemoveCart(pid)
+    const removeCart = async(pid, color) => { 
+        const response = await apiRemoveCart(pid, color)
             if(response.success) {
                 dispatch(getCurrent()) 
             }
@@ -33,14 +33,14 @@ const Cart = ({dispatch, navigate}) => {
             {current?.cart && current?.cart?.map(el => (
                 <div key={el._id} className='flex justify-between items-center'>
                     <div className='flex gap-2'>
-                        <img src={el.product?.thumb} alt='thumb' className='w-16 h-16 object-cover rounded-md'/>
+                        <img src={el.thumbnail} alt='thumb' className='w-16 h-16 object-cover rounded-md'/>
                         <div className='flex flex-col gap-1'>
-                            <span className='text-sm text-main'>{el.product?.tiltle}</span>
+                            <span className='text-sm text-main'>{el.tiltle}</span>
                             <span className='text-[12px]'>{el.color}</span>
-                            <span className='text-sm'>{formatMoney(el.product?.price)+ ' VNĐ'}</span>
+                            <span className='text-sm'>{formatMoney(el.price)+ ' VNĐ'}</span>
                         </div>
                     </div>
-                    <span onClick={()=>removeCart(el.product?._id)} className='h-8 w-8 rounded-full hover:bg-gray-700 flex cursor-pointer items-center justify-center'><ImBin size={16} /></span>
+                    <span onClick={()=>removeCart(el.product?._id, el.color)} className='h-8 w-8 rounded-full hover:bg-gray-700 flex cursor-pointer items-center justify-center'><ImBin size={16} /></span>
                 </div>
             ))}
         </section>

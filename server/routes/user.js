@@ -17,7 +17,7 @@ router.get('/', [verifyAccessToken,isAdmin],ctrls.getAllUsers)
 router.delete('/:uid',[verifyAccessToken,isAdmin],ctrls.deleteUser)
 router.put('/uduser',[verifyAccessToken],uploader.single('avatar'), ctrls.updateUser)
 router.put('/cart',[verifyAccessToken], ctrls.updateCart)
-router.delete('/remove-cart/:pid',[verifyAccessToken], ctrls.removeProductInCart)
+router.delete('/remove-cart/:pid/:color',[verifyAccessToken], ctrls.removeProductInCart)
 router.put('/address',[verifyAccessToken,isAdmin], ctrls.updateUserAddress)
 
 
