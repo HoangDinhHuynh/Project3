@@ -5,12 +5,10 @@ export const ProductSlice = createSlice({
     name: 'product',
     initialState:{
         newProduct : null,
-        errorMessage : ''
+        errorMessage : '',
     },
     reducers:{
-        // logout : (state)=>{
-        //     state.isLoading = false
-        // }
+        
     },
     extraReducers: (builder) => {
         builder.addCase(getNewProducts.pending, (state) => {

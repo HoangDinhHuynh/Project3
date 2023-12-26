@@ -13,7 +13,7 @@ import path from 'ultils/path';
 
 const Cart = ({dispatch, navigate}) => {
 
-    const {current} = useSelector(state => state.user)
+    const {currentCart } = useSelector(state => state.user)
     const removeCart = async(pid, color) => { 
         const response = await apiRemoveCart(pid, color)
             if(response.success) {
@@ -29,14 +29,15 @@ const Cart = ({dispatch, navigate}) => {
             <span onClick={()=> dispatch(showCart())} className='cursor-pointer p-2'><IoIosCloseCircle size={24} /></span>
         </header>
         <section className='row-span-7 gap-3 flex flex-col h-full  max-h-full overflow-y-auto py-3'>
-            {!current?.cart && <span className='text-xs italic'>Your cart is empty.</span>}
-            {current?.cart && current?.cart?.map(el => (
+            {!currentCart && <span className='text-xs italic'>Your cart is empty.</span>}
+            {currentCart && currentCart?.map(el => (
                 <div key={el._id} className='flex justify-between items-center'>
                     <div className='flex gap-2'>
                         <img src={el.thumbnail} alt='thumb' className='w-16 h-16 object-cover rounded-md'/>
                         <div className='flex flex-col gap-1'>
                             <span className='text-sm text-main'>{el.tiltle}</span>
                             <span className='text-[12px]'>{el.color}</span>
+                            <span className='text-[12px]'>{`Quantity: ${el.quantity}`}</span>
                             <span className='text-sm'>{formatMoney(el.price)+ ' VNĐ'}</span>
                         </div>
                     </div>
@@ -47,7 +48,7 @@ const Cart = ({dispatch, navigate}) => {
         <div className='row-span-2 flex flex-col justify-between h-full'>
             <div className='flex items-center justify-between pt-4 border-t'>
                 <span>Subtotal :</span>
-                <span>{formatMoney(current?.cart?.reduce((sum, el) => sum + Number(el.product?.price), 0))+ ' VNĐ'}</span>
+                <span>{formatMoney(currentCart?.reduce((sum, el) => sum + Number(el.price)*el.quantity, 0))+ ' VNĐ'}</span>
             </div>
             <span className='text-center text-gray-700 italic text-xs'>Shipping, taxes, and discounts calculated at checkout.</span>
             <Button handleOnClick={() => {
