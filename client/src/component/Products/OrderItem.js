@@ -6,10 +6,10 @@ import { updateCart } from 'store/user/userSlice'
 import withBase from 'hocs/withBase'
 
 
-const OrderItem = ({el, defaultQuantity = 1, dispatch}) => {
+const OrderItem = ({dispatch, color, dfQuantity = 1, price, tiltle, thumbnail, pid}) => {
 
     const { current } = useSelector(state => state.user)
-    const [quantity, setQuantity] = useState(() => defaultQuantity)
+    const [quantity, setQuantity] = useState(() => dfQuantity)
     const handleQuantity = (number) => {
       if (+number > 1) setQuantity(number)
     }
@@ -19,17 +19,17 @@ const OrderItem = ({el, defaultQuantity = 1, dispatch}) => {
         if (flag === 'plus') setQuantity(prev => +prev + 1)
     }
     useEffect(() => { 
-      dispatch(updateCart({pid : el.product?._id, quantity, color : el.color}))
+      dispatch(updateCart({pid , quantity, color}))
      },[quantity])
       
   return (
     <div className='font-bold grid-cols-10 py-3 grid w-main mx-auto border-b'>
             <span className='col-span-6 w-full text-center'>
               <div className='flex gap-2 px-4 py-2'>
-                <img src={el.thumbnail} alt='thumb' className='w-28 h-28 object-cover rounded-md' />
+                <img src={thumbnail } alt='thumb' className='w-28 h-28 object-cover rounded-md' />
                 <div className='flex flex-col items-start gap-1'>
-                  <span className='text-sm text-main'>{el.tiltle}</span>
-                  <span className='text-[12px] font-main'>{el.color}</span>
+                  <span className='text-sm text-main'>{tiltle}</span>
+                  <span className='text-[12px] font-main'>{color}</span>
                 </div>
               </div>
             </span>
@@ -43,7 +43,7 @@ const OrderItem = ({el, defaultQuantity = 1, dispatch}) => {
               </div>
             </span>
             <span className='col-span-3 w-full h-full flex justify-center items-center text-center'>
-              <span className='text-lg'>{formatMoney(el.price*quantity) + ' VNĐ'}</span>
+              <span className='text-lg'>{formatMoney(price*quantity) + ' VNĐ'}</span>
             </span>
           </div>
   )

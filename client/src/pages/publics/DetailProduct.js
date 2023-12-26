@@ -1,4 +1,4 @@
-import React,{useCallback, useEffect,useState} from 'react'
+import React,{useCallback, useEffect,useRef,useState} from 'react'
 import { createSearchParams, useParams } from 'react-router-dom'
 import { apiGetProduct,apiGetProducts } from '../../apis/product'
 import {Breadcrumb,Button,SelectQuantity,ProductExtrainfoitem,ProductInfomation,CustomSlider} from '../../component'
@@ -32,6 +32,7 @@ const settings = {
 const DetailProduct = ({isQuickView, data, location, navigate, dispatch}) => {
 
   const params = useParams()
+  const tiltleRef = useRef()
   const {current} = useSelector(state => state.user)
   const [product, setProduct] = useState(null)
   const [currentImage, setCurrentImage] = useState(null)
@@ -84,7 +85,7 @@ const DetailProduct = ({isQuickView, data, location, navigate, dispatch}) => {
             thumb: product?.thumb,
         })
       }
-  },[varriant])
+  },[varriant, product])
   const fetchProducts = async() => { 
     const response = await apiGetProducts({category})
     if (response.success) setRelatedProducts(response.products)
@@ -95,10 +96,11 @@ const DetailProduct = ({isQuickView, data, location, navigate, dispatch}) => {
       fetchProducts()
     }
     window.scrollTo(0,0)
+    tiltleRef.current.scrollIntoView({block : 'center'})
    },[pid])
    useEffect(() => { 
     if(pid)   fetchProductData()
-   },[update])
+   },[update,pid])
 
    const reRender = useCallback(() => { 
       setUpdate(!update)
@@ -154,7 +156,7 @@ const DetailProduct = ({isQuickView, data, location, navigate, dispatch}) => {
     <div className='w-full '>
       {!isQuickView && 
       <div className='h-[81px] flex justify-center items-center bg-gray-100 '>
-          <div className='w-main'>
+          <div ref={tiltleRef} className='w-main'>
             <h3 className='font-semibold'>{currentProduct.tiltle || product?.tiltle}</h3>
             <Breadcrumb tiltle={currentProduct.tiltle || product?.tiltle} category={category} />
           </div>

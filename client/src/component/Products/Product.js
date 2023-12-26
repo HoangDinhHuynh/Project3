@@ -4,7 +4,7 @@ import label from 'assets/label.webp'
 import labelTrend from 'assets/label-trend.png'
 import {SelectOption} from '..'
 import icons from 'ultils/icon'
-import { Link } from "react-router-dom";
+import { Link, createSearchParams } from "react-router-dom";
 import withBase from "hocs/withBase";
 import { showModal } from "store/app/appSlice";
 import { DetailProduct } from "pages/publics";
@@ -19,30 +19,41 @@ import { BsCartCheckFill,BsCartPlusFill } from "react-icons/bs";
 const {AiFillEye, BsFillSuitHeartFill}  = icons
 
 
-const Product = ({productData, isNew , normal, navigate, dispatch}) =>{
+const Product = ({productData, isNew , normal, navigate, dispatch, location}) =>{
     const [isShowOption, setIsShowOption] = useState(false)
     const {current} = useSelector(state => state.user)
     const handleClickOptions = async(e,flag) => { 
         e.stopPropagation()
         if(flag === 'CART') {
-            if(!current) return Swal.fire({
-                title : 'Almost...',
-                text : 'Please login first',
-                icon: 'info',
-                cancelButtonText : 'Not now!',
-                showCancelButton : true,
-                showConfirmButton: true,
-                confirmButtonText: 'Go login page'
-            }).then((rs)=>{
-                if(rs.isConfirmed) navigate(`/${path.LOGIN}`)
-            })
-            const response = await apiUpdateCart({pid:productData._id, color: productData.color})
-            if(response.success) {
-                toast.success(response.mes)
-                dispatch(getCurrent()) 
-            }
-            else toast.error(response.mes)
-        }
+                if(!current) return Swal.fire({
+                    title : 'Almost...',
+                    text : 'Please login first',
+                    icon: 'info',
+                    cancelButtonText : 'Not now!',
+                    showCancelButton : true,
+                    showConfirmButton: true,
+                    confirmButtonText: 'Go login page'
+                }).then((rs)=>{
+                    if(rs.isConfirmed) navigate({
+                      pathname : `/${path.LOGIN}`,
+                      search : createSearchParams({redirect: location.pathname}).toString()
+                    })
+                })
+                const response = await apiUpdateCart({
+                  pid : productData?._id,
+                  color: productData?.color,
+                  quantity :1 ,
+                  price: productData?.price,
+                  thumbnail: productData?.thumb,
+                  tiltle: productData?.tiltle,
+        
+                })
+                if(response.success) {
+                    toast.success(response.mes)
+                    dispatch(getCurrent()) 
+                }
+                else toast.error(response.mes)
+             } 
         if(flag === 'WISHLIST') console.log("Wishlist")
         if(flag === 'QUICK_VIEW') {
             dispatch(showModal({isShowModal: true, modalChildren: <DetailProduct data={{pid: productData?._id, category: productData?.category}} isQuickView/>}))

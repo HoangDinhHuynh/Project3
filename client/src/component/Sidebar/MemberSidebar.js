@@ -57,8 +57,14 @@ const MemberSidebar = () => {
                   ))}
                 </div> }
               </div>}
+              
           </Fragment>
         ))}
+        <NavLink 
+                    to={'/'}
+                    >
+                      HOME
+                    </NavLink>
       </div>
     </div>
   )
