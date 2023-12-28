@@ -289,3 +289,14 @@ const {RiTruckFill,FaShieldAlt,BsReplyFill,FaTty,AiFillGift} = icons
         value : 'Active'
     },
  ]
+
+ export const statusOrders=[
+    {
+        label : 'Cancelled',
+        value : 'Cancelled',
+    },
+    {
+        label : 'Succeed',
+        value : 'Succeed',
+    },
+ ]

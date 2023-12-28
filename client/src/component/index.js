@@ -25,6 +25,7 @@ export { default as InputForm } from './Inputs/InputForm'
 export { default as Select } from './Inputs/Select'
 export { default as MarkdownEditor } from './Inputs/MarkdownEditor'
 export { default as InputSelect } from './Inputs/InputSelect'
+export { default as CustomSelect } from './Inputs/CustomSelect'
 
 // NAVIGATIONS
 

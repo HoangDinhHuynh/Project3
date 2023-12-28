@@ -5,7 +5,7 @@ const blogCategoryRouter = require('./blogCategory')
 const blogRouter = require('./blog')
 const brandRouter = require('./brand')
 const couponRouter = require('./coupon')
-const orderRouter = require('./oder')
+const orderRouter = require('./order')
 const insertRouter = require('./inser')
 const {notFound,errHandler} = require('../middlewares/ErrHandler')
 
