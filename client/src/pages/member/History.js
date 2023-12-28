@@ -2,7 +2,11 @@ import React from 'react'
 
 const History = () => {
   return (
-    <div>History</div>
+    <div className='w-full relative px-4'>
+       <header className='text-3xl font-semibold py-4 border-b border-b-blue-200'>
+          History
+      </header>
+    </div>
   )
 }
 

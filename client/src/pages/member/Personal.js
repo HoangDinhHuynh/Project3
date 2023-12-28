@@ -8,12 +8,16 @@ import avatar from 'assets/avatar-default.png'
 import { apiUpdateCurrent } from 'apis'
 import { getCurrent } from 'store/user/asyncAction'
 import { toast } from 'react-toastify'
+import withBase from 'hocs/withBase'
+import { useSearchParams } from 'react-router-dom'
 
-const Personal = () => {
+const Personal = ({navigate}) => {
 
   const {register, formState: {errors , isDirty} , handleSubmit , reset} = useForm()
   const { current} = useSelector(state => state.user)
   const dispatch = useDispatch()
+  const [searchParams] = useSearchParams()
+  // console.log(searchParams.get('redirect'))
   useEffect(() => {
     reset({
       firstname : current?.firstname,
@@ -21,6 +25,7 @@ const Personal = () => {
       mobile : current?.mobile,
       email : current?.email,
       avatar : current?.avatar,
+      address : current?.address,
     })
 
   },[current])
@@ -34,6 +39,7 @@ const Personal = () => {
     if(response.success) {
         dispatch(getCurrent())
         toast.success(response.mes)
+        if(searchParams.get('redirect')) navigate(searchParams.get('redirect'))
     }else toast.error(response.mes)
 }
   return (
@@ -84,6 +90,16 @@ const Personal = () => {
               }}
               fullWidth
         />
+        <InputForm 
+              label='Address'
+              register={register}
+              errors={errors}
+              id='address'
+              validate={{
+                required : 'Need fill this field',
+              }}
+              fullWidth
+        />
         <div className='flex items-center gap-2'>
           <span className='font-medium'>Account Status:</span>
           <span>{current?.isBlocked ? "Blocked" : "Actived"}</span>
@@ -109,4 +125,4 @@ const Personal = () => {
   )
 }
 
-export default Personal
+export default withBase(Personal)

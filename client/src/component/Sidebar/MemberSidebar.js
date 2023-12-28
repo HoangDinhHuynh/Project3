@@ -63,8 +63,8 @@ const MemberSidebar = () => {
         <NavLink className='flex px-4 py-2'
                     to={'/'}
                     >
-                        <FaHome />
-                        <span className='pl-4'>HOME PAGE</span>
+                        <FaHome size={20} />
+                        <span className='pl-2'>HOME PAGE</span>
                     </NavLink>
       </div>
     </div>
