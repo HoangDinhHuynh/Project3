@@ -14,8 +14,8 @@ var orderSchema = new mongoose.Schema({
     ],
     status:{
         type:String,
-        default:'Processing...',
-        emun :['Cancelled','Processing','Succeed']
+        default:'Cancelled',
+        emun :['Cancelled','Succeed']
     },
     total:Number,
     

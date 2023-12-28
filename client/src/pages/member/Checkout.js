@@ -1,18 +1,27 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import payment from 'assets/payment.svg'
 import { useSelector } from 'react-redux'
 import { formatMoney } from 'ultils/helpers'
-import { InputForm, Paypal } from 'component'
+import { Congrat, InputForm, Paypal } from 'component'
 import { useForm } from 'react-hook-form'
+import withBase from 'hocs/withBase'
+import { getCurrent } from 'store/user/asyncAction'
 
-const Checkout = () => {
+const Checkout = ({dispatch, navigate}) => {
 
-    const {currentCart} = useSelector(state => state.user)
-    const {register, formState:{errors}, reset, handleSubmit, watch} = useForm()
-
- 
+    const {currentCart, current} = useSelector(state => state.user)
+    const {register, formState:{errors}, watch, setValue} = useForm()
+    const [isSuccess, setIsSuccess] = useState(false)
+    const address = watch('address')
+    useEffect(() => { 
+      setValue('address', current?.address)
+     },[current.address])
+     useEffect(() => { 
+      if(isSuccess) dispatch(getCurrent())
+      },[isSuccess])
   return (
     <div className='p-8 w-full grid grid-cols-10 h-full max-h-screen overflow-y-auto gap-6'>
+      {isSuccess && <Congrat />}
       <div className='w-full flex items-center col-span-4'>
         <img src={payment} alt='payment' className='h-[70%] object-contain'/>
       </div>
@@ -30,9 +39,9 @@ const Checkout = () => {
             <tbody>
               {currentCart?.map(  el => (
                 <tr className='border' key={el._id}>
-                  <td className='text-left p-2'>{el.tiltle}</td>
-                  <td className='text-center p-2'>{el.quantity}</td>
-                  <td className='text-right p-2'>{formatMoney(el.price)+' VNĐ'}</td>
+                  <td className='text-left px-2'>{el.tiltle}</td>
+                  <td className='text-center px-2'>{el.quantity}</td>
+                  <td className='text-right px-2'>{formatMoney(el.price)+' VNĐ'}</td>
                 </tr>
                 ))}
             </tbody>
@@ -51,14 +60,24 @@ const Checkout = () => {
                  validate={{
                    required : 'Need fill this field'
                  }}
-                 placeholder='Please type your address for delivery'
+                 placeholder='Please fill the address firsr'
                  style='text-sm'
                  fullWidth
               />
             </div>
-            <div>
-              <Paypal amount={Math.round(+currentCart?.reduce((sum,el)=> +el?.price*el.quantity + sum,0) / 23500)} />
-            </div>
+            {address && address.length > 10 &&
+              <div className='w-full mx-auto'>
+                <Paypal 
+                payload={{
+                  products : currentCart, 
+                  total : Math.round(+currentCart?.reduce((sum,el)=> +el?.price*el.quantity + sum,0) / 23500),
+                  address
+                }}
+                setIsSuccess={setIsSuccess}
+                amount={Math.round(+currentCart?.reduce((sum,el)=> +el?.price*el.quantity + sum,0) / 23500)}
+                />
+              </div>
+            }
           </div>
         </div>
         
@@ -67,4 +86,4 @@ const Checkout = () => {
   )
 }
 
-export default Checkout
+export default withBase(Checkout)
