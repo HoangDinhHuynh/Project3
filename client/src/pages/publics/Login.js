@@ -54,7 +54,6 @@ const Login = () =>{
         const {firstname,lastname,mobile, ...data} = payLoad 
 
         const invalids = isRegister ? validate(payLoad,setInvalidFields) : validate(data,setInvalidFields)
-        console.log(invalids)
         if (invalids === 0){
             if(isRegister){
             dispatch(showModal({isShowModal: true,modalChildren: <Loading />}))

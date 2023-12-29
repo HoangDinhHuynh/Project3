@@ -63,7 +63,7 @@ const Product = ({productData, isNew , normal, navigate, dispatch, location}) =>
         <div className="w-full text-base px-[10px]">
             <div 
             className="w-full border rounded p-[15px] flex flex-col items-center"
-            onClick={e => navigate(`${productData?.category?.toLowerCase()}/${productData?._id}/${productData?.tiltle}`)}
+            onClick={e => navigate(`/${productData?.category?.toLowerCase()}/${productData?._id}/${productData?.tiltle}`)}
             onMouseEnter={e => {
                 e.stopPropagation()
                 setIsShowOption(true)
