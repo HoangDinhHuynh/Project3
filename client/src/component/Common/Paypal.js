@@ -18,6 +18,18 @@ const style = {"layout":"vertical"};
 const ButtonWrapper = ({ currency, showSpinner, amount, payload, setIsSuccess}) => {
     const navigate = useNavigate()
     const [{ isPending, options }, dispatch] = usePayPalScriptReducer();
+    
+    const hanldeSaveOrder = async() => { 
+        const response = await apiCreateOrder({...payload, status : 'Succeed'})
+        if (response.success){
+            setIsSuccess(true)
+            setTimeout(() => { 
+                Swal.fire('Congrat!', 'Order was created.', 'success').then(() => { 
+                    navigate('/')
+                })
+            },1500)
+        }
+    }
     useEffect(() => { 
         dispatch({
             type: 'resetOptions',
@@ -26,19 +38,7 @@ const ButtonWrapper = ({ currency, showSpinner, amount, payload, setIsSuccess}) 
             }
         })
      },[currency, showSpinner])
-
-     const hanldeSaveOrder = async() => { 
-        const response = await apiCreateOrder({...payload, status : 'Succeed'})
-        if (response.success){
-            setIsSuccess(true)
-            setTimeout(() => { 
-                Swal.fire('Congrat!', 'Order was created.', 'success').then(() => { 
-                    navigate('/')
-                 })
-             },1500)
-        }
-      }
-
+    
     return (
         <>
             { (showSpinner && isPending) && <div className="spinner" /> }

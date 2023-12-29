@@ -63,6 +63,7 @@ const getAllProduct = asyncHanlder(async(req,res)=>{
     }
     if (queries?.tiltle) restQueries.tiltle = {$regex: queries.tiltle ,$options: 'i'}
     if (queries?.category) restQueries.category ={ $regex : queries.category,$options:'i'}
+    if (queries?.brand) restQueries.brand ={ $regex : queries.brand,$options:'i'}
     let queryObject = {}
     if(queries?.q){
         delete restQueries.q

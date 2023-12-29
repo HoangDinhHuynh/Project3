@@ -47,7 +47,10 @@ const Home = () =>{
                                     <h4 className="font-semibold uppercase">{el.tiltle}</h4>
                                     <ul className="text-sm">
                                         {el?.brand?.map(item => (
-                                            <span key={item} className="flex gap-1 items-center text-gray-500 hover:text-main cursor-pointer">
+                                            <span 
+                                            key={item} 
+                                            className="flex hover:underline gap-1 items-center text-gray-500 hover:text-main cursor-pointer"
+                                            >
                                                 <IoIosArrowForward size={14} />
                                                 <li>{item}</li>
                                             </span>

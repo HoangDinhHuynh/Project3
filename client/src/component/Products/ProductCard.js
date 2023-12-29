@@ -1,9 +1,13 @@
 import React,{memo} from "react";
 import {formatMoney,renderStarFromNumber} from '../../ultils/helpers' 
+import withBase from "hocs/withBase";
+import path from "ultils/path";
 
-const ProductCard = ({price,totalRating,tiltle,image}) =>{
+const ProductCard = ({price,totalRating,tiltle,image,pid, navigate, category}) =>{
     return(
-        <div className="w-1/3 flex-auto px-[10px] mb-[20px]">
+        <div 
+        onClick={e => navigate(`${category?.toLowerCase()}/${pid}/${tiltle}`)}
+        className="w-1/3 flex-auto px-[10px] mb-[20px] cursor-pointer">
             <div className="flex w-full border">
                 <img src={image} alt='products' className="w-[90px] object-contain" />
                 <div className="flex flex-col mt-[15px] items-start gap-1 w-full text-xs">
@@ -18,4 +22,4 @@ const ProductCard = ({price,totalRating,tiltle,image}) =>{
     )
 }
 
-export default memo(ProductCard)
+export default withBase(memo(ProductCard))
