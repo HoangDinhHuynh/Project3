@@ -99,7 +99,7 @@ const login = asyncHanlder(async(req,res)=>{
         })
    }
    else{
-        throw new Error('Invalid Credentials!')
+        throw new Error('Wrong Account or Password !')
     }
 
 })

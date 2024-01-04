@@ -96,7 +96,7 @@ const DetailProduct = ({isQuickView, data, location, navigate, dispatch}) => {
       fetchProducts()
     }
     window.scrollTo(0,0)
-    tiltleRef.current.scrollIntoView({block : 'center'})
+    // tiltleRef.current.scrollIntoView({block : 'center'})
    },[pid])
    useEffect(() => { 
     if(pid)   fetchProductData()
